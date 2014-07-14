@@ -276,10 +276,7 @@ static time_t parse_date_string(const char *datetime) {
 
 // This array must be in sync with enum in internal.h
 static const char *config_options[] = {
-  "cgi_pattern", "**.cgi$|**.pl$|**.php$",
-  "cgi_environment", NULL,
   "put_delete_auth_file", NULL,
-  "cgi_interpreter", NULL,
   "protect_uri", NULL,
   "authentication_domain", "mydomain.com",
   "ssi_pattern", "**.shtml$|**.shtm$",
@@ -289,7 +286,7 @@ static const char *config_options[] = {
   "error_log_file", NULL,
   "global_auth_file", NULL,
   "index_files",
-    "index.html,index.htm,index.cgi,index.shtml,index.php,index.lp",
+    "index.html,index.htm,index.shtml,index.php,index.lp",
   "enable_keep_alive", "no",
   "access_control_list", NULL,
   "extra_mime_types", NULL,
@@ -1412,7 +1409,6 @@ static int convert_uri_to_file_name(struct mg_connection *conn, char *buf,
   struct vec a, b;
   const char *rewrite, *uri = conn->request_info.uri,
         *root = conn->ctx->config[DOCUMENT_ROOT];
-  char *p;
   int match_len;
   char gz_path[PATH_MAX];
   char const* accept_encoding;
@@ -1452,28 +1448,6 @@ static int convert_uri_to_file_name(struct mg_connection *conn, char *buf,
       if (mg_stat(gz_path, filep)) {
         filep->gzipped = 1;
         return 1;
-      }
-    }
-  }
-
-  // Support PATH_INFO for CGI scripts.
-  for (p = buf + strlen(root == NULL ? "" : root); *p != '\0'; p++) {
-    if (*p == '/') {
-      *p = '\0';
-      if (match_prefix(conn->ctx->config[CGI_EXTENSIONS],
-                       strlen(conn->ctx->config[CGI_EXTENSIONS]), buf) > 0 &&
-          mg_stat(buf, filep)) {
-        // Shift PATH_INFO block one character right, e.g.
-        //  "/x.cgi/foo/bar\x00" => "/x.cgi\x00/foo/bar\x00"
-        // conn->path_info is pointing to the local variable "path" declared
-        // in handle_request(), so PATH_INFO is not valid after
-        // handle_request returns.
-        conn->path_info = p + 1;
-        memmove(p + 2, p + 1, strlen(p + 1) + 1);  // +1 is for trailing \0
-        p[1] = '/';
-        return 1;
-      } else {
-        *p = '/';
       }
     }
   }
@@ -3884,14 +3858,12 @@ int main(int argc, char *argv[]) {
   // https://github.com/valenok/mongoose/issues/181
   set_absolute_path(options, "document_root", argv[0]);
   set_absolute_path(options, "put_delete_auth_file", argv[0]);
-  set_absolute_path(options, "cgi_interpreter", argv[0]);
   set_absolute_path(options, "access_log_file", argv[0]);
   set_absolute_path(options, "error_log_file", argv[0]);
   set_absolute_path(options, "global_auth_file", argv[0]);
 
   // Make extra verification for certain options
   verify_existence(options, "document_root", 1);
-  verify_existence(options, "cgi_interpreter", 0);
 
   // Setup signal handler: quit on Ctrl-C
   signal(SIGTERM, signal_handler);
