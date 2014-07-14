@@ -48,7 +48,7 @@ char *skip_quoted(char **buf, const char *delimiters,
 
 // Parse HTTP headers from the given buffer, advance buffer to the point
 // where parsing stopped.
-void parse_http_headers(char **buf, struct mg_request_info *ri) {
+static void parse_http_headers(char **buf, struct mg_request_info *ri) {
   int i;
 
   for (i = 0; i < (int) ARRAY_SIZE(ri->http_headers); i++) {

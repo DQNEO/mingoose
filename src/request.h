@@ -21,6 +21,5 @@ struct mg_request_info {
   } http_headers[64];         // Maximum 64 headers
 };
 
-void parse_http_headers(char **buf, struct mg_request_info *ri);
 int parse_http_message(char *buf, int len, struct mg_request_info *ri);
 int get_request_len(const char *buf, int buf_len);
