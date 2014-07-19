@@ -495,5 +495,7 @@ int is_authorized_for_put(struct mg_connection *conn);
 int mg_printf(struct mg_connection *conn, const char *fmt, ...) ;
 int mg_chunked_printf(struct mg_connection *conn, const char *fmt, ...) ;
 
+int pull(FILE *fp, struct mg_connection *conn, char *buf, int len) ;
+
 
 #endif // MONGOOSE_HEADER_INCLUDED

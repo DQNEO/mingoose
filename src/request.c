@@ -146,3 +146,89 @@ int parse_http_message(char *buf, int len, struct mg_request_info *ri) {
   }
   return request_length;
 }
+
+
+// Return HTTP header value, or NULL if not found.
+static const char *get_header(const struct mg_request_info *ri,
+                              const char *name) {
+  int i;
+
+  for (i = 0; i < ri->num_headers; i++)
+    if (!mg_strcasecmp(name, ri->http_headers[i].name))
+      return ri->http_headers[i].value;
+
+  return NULL;
+}
+
+const char *mg_get_header(const struct mg_connection *conn, const char *name) {
+  return get_header(&conn->request_info, name);
+}
+
+
+// Keep reading the input (either opened file descriptor fd, or socket sock,
+// or SSL descriptor ssl) into buffer buf, until \r\n\r\n appears in the
+// buffer (which marks the end of HTTP request). Buffer buf may already
+// have some data. The length of the data is stored in nread.
+// Upon every read operation, increase nread by the number of bytes read.
+static int read_request(FILE *fp, struct mg_connection *conn,
+                        char *buf, int bufsiz, int *nread) {
+  int request_len, n = 0;
+
+  request_len = get_request_len(buf, *nread);
+  while (conn->ctx->stop_flag == 0 &&
+         *nread < bufsiz &&
+         request_len == 0 &&
+         (n = pull(fp, conn, buf + *nread, bufsiz - *nread)) > 0) {
+    *nread += n;
+    assert(*nread <= bufsiz);
+    request_len = get_request_len(buf, *nread);
+  }
+
+  return request_len <= 0 && n <= 0 ? -1 : request_len;
+}
+
+static void reset_per_request_attributes(struct mg_connection *conn) {
+  conn->path_info = NULL;
+  conn->num_bytes_sent = conn->num_bytes_read = 0;
+  conn->status_code = -1;
+  conn->must_close = conn->request_len = conn->throttle = 0;
+}
+
+int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len) {
+  const char *cl;
+
+  ebuf[0] = '\0';
+  reset_per_request_attributes(conn);
+  conn->request_len = read_request(NULL, conn, conn->buf, conn->buf_size,
+                                   &conn->data_len);
+  assert(conn->request_len < 0 || conn->data_len >= conn->request_len);
+
+  if (conn->request_len == 0 && conn->data_len == conn->buf_size) {
+    snprintf(ebuf, ebuf_len, "%s", "Request Too Large");
+  } else if (conn->request_len <= 0) {
+    snprintf(ebuf, ebuf_len, "%s", "Client closed connection");
+  } else if (parse_http_message(conn->buf, conn->buf_size,
+                                &conn->request_info) <= 0) {
+    snprintf(ebuf, ebuf_len, "Bad request: [%.*s]", conn->data_len, conn->buf);
+  } else {
+    // Request is valid. Set content_len attribute by parsing Content-Length
+    // If Content-Length is absent, set content_len to 0 if request is GET,
+    // and set it to INT64_MAX otherwise. Setting to INT64_MAX instructs
+    // mg_read() to read from the socket until socket is closed.
+    // The reason for treating GET and POST/PUT differently is that libraries
+    // like jquery do not set Content-Length in GET requests, and we don't
+    // want mg_read() to hang waiting until socket is timed out.
+    // See https://github.com/cesanta/mongoose/pull/121 for more.
+    conn->content_len = INT64_MAX;
+    if (!mg_strcasecmp(conn->request_info.request_method, "GET")) {
+      conn->content_len = 0;
+    }
+    if ((cl = get_header(&conn->request_info, "Content-Length")) != NULL) {
+      conn->content_len = strtoll(cl, NULL, 10);
+    }
+    conn->birth_time = time(NULL);
+  }
+  return ebuf[0] == '\0';
+}
+
+
