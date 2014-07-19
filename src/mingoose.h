@@ -479,6 +479,7 @@ int mg_strcasecmp(const char *s1, const char *s2) ;
 const char *mg_strcasestr(const char *big_str, const char *small_str);
 int mg_vsnprintf(char *buf, size_t buflen, const char *fmt, va_list ap);
 
-
+int mg_snprintf(char *buf, size_t buflen,
+    PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(3, 4);
 
 #endif // MONGOOSE_HEADER_INCLUDED
