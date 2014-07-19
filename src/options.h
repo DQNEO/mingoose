@@ -25,3 +25,5 @@ static const char *config_options[] = {
   "request_timeout_ms", "30000",
   NULL
 };
+
+int get_option_index(const char *name) ;

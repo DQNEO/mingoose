@@ -254,7 +254,6 @@ static time_t parse_date_string(const char *datetime) {
 }
 //-- end of src/parse_date.c --
 //-- src/options.c --
-int get_option_index(const char *name) ;
 
 const char *mg_get_option(const struct mg_context *ctx, const char *name) {
   int i;
