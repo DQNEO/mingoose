@@ -503,6 +503,7 @@ const char *suggest_connection_header(const struct mg_connection *conn);
 void sockaddr_to_string(char *buf, size_t len,
                         const union usa *usa) ;
 
+void log_access(const struct mg_connection *conn) ;
 
 
 #endif // MONGOOSE_HEADER_INCLUDED
