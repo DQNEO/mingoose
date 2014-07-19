@@ -13,10 +13,10 @@ static struct mg_connection *create_fake_connection(struct mg_context *ctx) {
 //-- end of src/util.c --
 //-- src/string.c --
 
-static int mg_snprintf(char *buf, size_t buflen,
+int mg_snprintf(char *buf, size_t buflen,
     PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(3, 4);
 
-static int mg_snprintf(char *buf, size_t buflen, const char *fmt, ...) {
+int mg_snprintf(char *buf, size_t buflen, const char *fmt, ...) {
   va_list ap;
   int n;
 
