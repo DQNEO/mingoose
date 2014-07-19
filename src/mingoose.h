@@ -520,4 +520,8 @@ int check_authorization(struct mg_connection *conn, const char *path);
 void send_authorization_request(struct mg_connection *conn) ;
 int is_authorized_for_put(struct mg_connection *conn);
 
+int mg_printf(struct mg_connection *conn, const char *fmt, ...) ;
+int mg_chunked_printf(struct mg_connection *conn, const char *fmt, ...) ;
+
+
 #endif // MONGOOSE_HEADER_INCLUDED
