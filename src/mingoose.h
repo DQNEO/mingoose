@@ -485,4 +485,7 @@ int get_option_index(const char *name) ;
 extern const char *config_options[];
 time_t parse_date_string(const char *datetime);
 
+int match_prefix(const char *pattern, int pattern_len, const char *str);
+
+
 #endif // MONGOOSE_HEADER_INCLUDED
