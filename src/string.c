@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+
 void mg_strlcpy(register char *dst, register const char *src, size_t n) {
   for (; *src != '\0' && n > 1; n--) {
     *dst++ = *src++;

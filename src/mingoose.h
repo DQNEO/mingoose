@@ -52,7 +52,10 @@
 #include <dirent.h>
 
 #include "request.h"
-#include "string.h"
+
+void mg_strlcpy(register char *dst, register const char *src, size_t n);
+char * mg_strndup(const char *ptr, size_t len);
+char * mg_strdup(const char *str);
 
 #if !defined(_LARGEFILE_SOURCE)
 #define _LARGEFILE_SOURCE     // Enable 64-bit file offsets
