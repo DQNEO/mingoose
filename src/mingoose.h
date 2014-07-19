@@ -52,6 +52,7 @@
 #include <dirent.h>
 
 #include "request.h"
+#include "options.h"
 
 void mg_strlcpy(register char *dst, register const char *src, size_t n);
 char * mg_strndup(const char *ptr, size_t len);
