@@ -74,9 +74,6 @@ static const char *next_option(const char *list, struct vec *val,
 //-- end of src/string.c --
 
 #include <openssl/md5.h>
-//-- src/crypto.c --
-
-//-- end of src/crypto.c --
 //-- src/auth.c --
 
 // Stringify binary data. Output buffer must be twice as big as input,
