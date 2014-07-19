@@ -1,5 +1,7 @@
 #include <string.h>
 #include <stddef.h>
+#include "mingoose.h"
+
 // This array must be in sync with enum in internal.h
 const char *config_options[] = {
   "put_delete_auth_file", NULL,
@@ -37,4 +39,15 @@ int get_option_index(const char *name) {
     }
   }
   return -1;
+}
+
+const char *mg_get_option(const struct mg_context *ctx, const char *name) {
+  int i;
+  if ((i = get_option_index(name)) == -1) {
+    return NULL;
+  } else if (ctx->config[i] == NULL) {
+    return "";
+  } else {
+    return ctx->config[i];
+  }
 }

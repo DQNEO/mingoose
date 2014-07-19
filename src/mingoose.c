@@ -1,4 +1,5 @@
 #include "mingoose.h"
+const char *http_500_error = "Internal Server Error";
 //-- src/util.c --
 
 // Return fake connection structure. Used for logging, if connection
@@ -163,16 +164,6 @@ static time_t parse_date_string(const char *datetime) {
 //-- end of src/parse_date.c --
 //-- src/options.c --
 
-const char *mg_get_option(const struct mg_context *ctx, const char *name) {
-  int i;
-  if ((i = get_option_index(name)) == -1) {
-    return NULL;
-  } else if (ctx->config[i] == NULL) {
-    return "";
-  } else {
-    return ctx->config[i];
-  }
-}
 //-- end of src/options.c --
 //-- src/crypto.c --
 static int is_big_endian(void) {
@@ -676,7 +667,7 @@ int mg_modify_passwords_file(const char *fname, const char *domain,
 //-- end of src/auth.c --
 //-- src/unix.c --
 
-static int mg_stat(const char *path, struct file *filep) {
+int mg_stat(const char *path, struct file *filep) {
   struct stat st;
 
   filep->modification_time = (time_t) 0;
@@ -816,7 +807,7 @@ static int call_user(int type, struct mg_connection *conn, void *p) {
     0 : conn->ctx->event_handler(&conn->event);
 }
 
-static FILE *mg_fopen(const char *path, const char *mode) {
+FILE *mg_fopen(const char *path, const char *mode) {
   return fopen(path, mode);
 }
 
@@ -827,7 +818,7 @@ static void sockaddr_to_string(char *buf, size_t len,
 }
 
 // Print error message to the opened error log stream.
-static void cry(struct mg_connection *conn, const char *fmt, ...) {
+void cry(struct mg_connection *conn, const char *fmt, ...) {
   char buf[MG_BUF_LEN], src_addr[IP_ADDR_STR_LEN];
   va_list ap;
   FILE *fp;
@@ -889,7 +880,7 @@ static const char *suggest_connection_header(const struct mg_connection *conn) {
   return should_keep_alive(conn) ? "keep-alive" : "close";
 }
 
-static void send_http_error(struct mg_connection *conn, int status,
+void send_http_error(struct mg_connection *conn, int status,
                             const char *reason, const char *fmt, ...) {
   char buf[MG_BUF_LEN];
   va_list ap;
@@ -3066,7 +3057,7 @@ static int is_valid_uri(const char *uri) {
   return uri[0] == '/' || (uri[0] == '*' && uri[1] == '\0');
 }
 
-static int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len) {
+int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len) {
   const char *cl;
 
   ebuf[0] = '\0';

@@ -453,23 +453,22 @@ struct de {
 #define CONFIG_FILE "mongoose.conf"
 #endif /* !CONFIG_FILE */
 
-const char *http_500_error = "Internal Server Error";
 
 char *skip_quoted(char **buf, const char *delimiters,
 		  const char *whitespace, char quotechar);
 
-static FILE *mg_fopen(const char *path, const char *mode);
-static int mg_stat(const char *path, struct file *filep);
-static void send_http_error(struct mg_connection *, int, const char *,
+FILE *mg_fopen(const char *path, const char *mode);
+int mg_stat(const char *path, struct file *filep);
+void send_http_error(struct mg_connection *, int, const char *,
                             PRINTF_FORMAT_STRING(const char *fmt), ...)
                             PRINTF_ARGS(4, 5);
-static void cry(struct mg_connection *conn,
+void cry(struct mg_connection *conn,
                 PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(2, 3);
-static int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len);
-static int exit_flag;
-static char server_name[40];        // Set by init_server_name()
-static char config_file[PATH_MAX];  // Set by process_command_line_arguments()
-static struct mg_context *ctx;      // Set by start_mongoose()
+int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len);
+int exit_flag;
+char server_name[40];        // Set by init_server_name()
+char config_file[PATH_MAX];  // Set by process_command_line_arguments()
+struct mg_context *ctx;      // Set by start_mongoose()
 
 int lowercase(const char *s) ;
 
