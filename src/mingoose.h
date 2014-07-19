@@ -497,5 +497,9 @@ int mg_chunked_printf(struct mg_connection *conn, const char *fmt, ...) ;
 
 int pull(FILE *fp, struct mg_connection *conn, char *buf, int len) ;
 
+int call_user(int type, struct mg_connection *conn, void *p) ;
+
+const char *suggest_connection_header(const struct mg_connection *conn);
+
 
 #endif // MONGOOSE_HEADER_INCLUDED
