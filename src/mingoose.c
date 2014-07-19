@@ -2476,16 +2476,14 @@ static char *get_option(char **options, const char *option_name) {
   return NULL;
 }
 
-static void verify_existence(char **options, const char *option_name,
-                             int must_be_dir) {
+static void verify_document_root(char *path) {
   struct stat st;
-  const char *path = get_option(options, option_name);
 
   if (path != NULL && (stat(path, &st) != 0 ||
-                       ((S_ISDIR(st.st_mode) ? 1 : 0) != must_be_dir))) {
-    die("Invalid path for %s: [%s]: (%s). Make sure that path is either "
+                       ((S_ISDIR(st.st_mode) ? 1 : 0) != 1))) {
+    die("Invalid path for document_root: [%s]: %s.\nMake sure that path is either "
         "absolute, or it is relative to mongoose executable.",
-        option_name, path, strerror(errno));
+        path, strerror(errno));
   }
 }
 
@@ -2559,7 +2557,7 @@ int main(int argc, char *argv[]) {
   set_absolute_path(options, "global_auth_file", argv[0]);
 
   // Make extra verification for certain options
-  verify_existence(options, "document_root", 1);
+  verify_document_root(get_option(options, "document_root"));
 
   // Setup signal handler: quit on Ctrl-C
   signal(SIGTERM, signal_handler);
