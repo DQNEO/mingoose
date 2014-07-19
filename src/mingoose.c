@@ -2479,8 +2479,7 @@ static char *get_option(char **options, const char *option_name) {
 static void verify_document_root(char *path) {
   struct stat st;
 
-  if (path != NULL && (stat(path, &st) != 0 ||
-                       ((S_ISDIR(st.st_mode) ? 1 : 0) != 1))) {
+  if (path != NULL && (stat(path, &st) != 0 || !S_ISDIR(st.st_mode) )  ) {
     die("Invalid path for document_root: [%s]: %s.\nMake sure that path is either "
         "absolute, or it is relative to mongoose executable.",
         path, strerror(errno));
