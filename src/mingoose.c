@@ -2438,53 +2438,7 @@ static void set_option(char **options, const char *name, const char *value) {
 }
 
 static void process_command_line_arguments(char *argv[], char **options) {
-  char line[MAX_CONF_FILE_LINE_SIZE], opt[sizeof(line)], val[sizeof(line)], *p;
-  FILE *fp = NULL;
-  size_t i, cmd_line_opts_start = 1, line_no = 0;
-
-  // Should we use a config file ?
-  if (argv[1] != NULL && argv[1][0] != '-') {
-    snprintf(config_file, sizeof(config_file), "%s", argv[1]);
-    cmd_line_opts_start = 2;
-  } else if ((p = strrchr(argv[0], DIRSEP)) == NULL) {
-    // No command line flags specified. Look where binary lives
-    snprintf(config_file, sizeof(config_file), "%s", CONFIG_FILE);
-  } else {
-    snprintf(config_file, sizeof(config_file), "%.*s%c%s",
-             (int) (p - argv[0]), argv[0], DIRSEP, CONFIG_FILE);
-  }
-
-  fp = fopen(config_file, "r");
-
-  // If config file was set in command line and open failed, die
-  if (cmd_line_opts_start == 2 && fp == NULL) {
-    die("Cannot open config file %s: %s", config_file, strerror(errno));
-  }
-
-  // Load config file settings first
-  if (fp != NULL) {
-    fprintf(stderr, "Loading config file %s\n", config_file);
-
-    // Loop over the lines in config file
-    while (fgets(line, sizeof(line), fp) != NULL) {
-      line_no++;
-
-      // Ignore empty lines and comments
-      for (i = 0; isspace(* (unsigned char *) &line[i]); ) i++;
-      if (line[i] == '#' || line[i] == '\0') {
-        continue;
-      }
-
-      if (sscanf(line, "%s %[^\r\n#]", opt, val) != 2) {
-        printf("%s: line %d is invalid, ignoring it:\n %s",
-               config_file, (int) line_no, line);
-      } else {
-        set_option(options, opt, val);
-      }
-    }
-
-    (void) fclose(fp);
-  }
+  size_t i, cmd_line_opts_start = 1;
 
   // If we're under MacOS and started by launchd, then the second
   // argument is process serial number, -psn_.....

@@ -452,11 +452,6 @@ struct de {
   struct file file;
 };
 
-#if !defined(CONFIG_FILE)
-#define CONFIG_FILE "mongoose.conf"
-#endif /* !CONFIG_FILE */
-
-
 char *skip_quoted(char **buf, const char *delimiters,
 		  const char *whitespace, char quotechar);
 
@@ -470,7 +465,6 @@ void cry(struct mg_connection *conn,
 int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len);
 int exit_flag;
 char server_name[40];        // Set by init_server_name()
-char config_file[PATH_MAX];  // Set by process_command_line_arguments()
 struct mg_context *ctx;      // Set by start_mongoose()
 
 int lowercase(const char *s) ;
