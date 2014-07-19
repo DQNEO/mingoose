@@ -73,11 +73,8 @@ static const char *next_option(const char *list, struct vec *val,
 
 //-- end of src/string.c --
 
+#include <openssl/md5.h>
 //-- src/crypto.c --
-static int is_big_endian(void) {
-  static const int n = 1;
-  return ((char *) &n)[0] == 0;
-}
 
 #ifndef HAVE_MD5
 typedef struct MD5Context {
@@ -292,15 +289,15 @@ char *mg_md5(char buf[33], ...) {
   va_list ap;
   MD5_CTX ctx;
 
-  MD5Init(&ctx);
+  MD5_Init(&ctx);
 
   va_start(ap, buf);
   while ((p = va_arg(ap, const char *)) != NULL) {
-    MD5Update(&ctx, (const unsigned char *) p, (unsigned) strlen(p));
+    MD5_Update(&ctx, (const unsigned char *) p, (unsigned) strlen(p));
   }
   va_end(ap);
 
-  MD5Final(hash, &ctx);
+  MD5_Final(hash, &ctx);
   bin2str(buf, hash, sizeof(hash));
   return buf;
 }
