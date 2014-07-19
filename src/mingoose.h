@@ -141,16 +141,7 @@ int mg_write(struct mg_connection *, const void *buf, int len);
 
 // Macros for enabling compiler-specific checks for printf-like arguments.
 #undef PRINTF_FORMAT_STRING
-#if defined(_MSC_VER) && _MSC_VER >= 1400
-#include <sal.h>
-#if defined(_MSC_VER) && _MSC_VER > 1400
-#define PRINTF_FORMAT_STRING(s) _Printf_format_string_ s
-#else
-#define PRINTF_FORMAT_STRING(s) __format_string s
-#endif
-#else
 #define PRINTF_FORMAT_STRING(s) s
-#endif
 
 #ifdef __GNUC__
 #define PRINTF_ARGS(x, y) __attribute__((format(printf, x, y)))
