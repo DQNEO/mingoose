@@ -1,3 +1,4 @@
+#include <stddef.h>
 // This array must be in sync with enum in internal.h
 static const char *config_options[] = {
   "put_delete_auth_file", NULL,

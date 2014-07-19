@@ -22,7 +22,7 @@ CFLAGS = -std=c99 -W -Wall -pedantic -pthread -pipe -I. -I.. -g -O0 -DNO_SSL_DL 
 # "-Wl,--as-needed" turned on by default  in cc command.
 # Also, this is turned in many other distros in static linkage builds.
 $(PROG): src/mingoose.c src/mingoose.h src/request.h src/request.c src/string.c
-	$(CC) src/mingoose.c src/request.c src/string.c -o $@ $(CFLAGS)
+	$(CC) src/mingoose.c src/request.c src/string.c src/options.c -o $@ $(CFLAGS)
 
 test:	$(PROG)
 	prove t/00.t
