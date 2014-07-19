@@ -112,11 +112,7 @@ static int match_prefix(const char *pattern, int pattern_len, const char *str) {
 }
 
 //-- end of src/string.c --
-//-- src/parse_date.c --
-//-- end of src/parse_date.c --
-//-- src/options.c --
 
-//-- end of src/options.c --
 //-- src/crypto.c --
 static int is_big_endian(void) {
   static const int n = 1;
