@@ -1,5 +1,3 @@
-#include <string.h>
-#include <stddef.h>
 #include "mingoose.h"
 
 // This array must be in sync with enum in internal.h
