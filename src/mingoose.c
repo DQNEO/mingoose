@@ -1,6 +1,4 @@
-//-- src/internal.h --
 #include "mingoose.h"
-//-- end of src/internal.h --
 //-- src/util.c --
 
 // Return fake connection structure. Used for logging, if connection
