@@ -472,4 +472,6 @@ static char server_name[40];        // Set by init_server_name()
 static char config_file[PATH_MAX];  // Set by process_command_line_arguments()
 static struct mg_context *ctx;      // Set by start_mongoose()
 
+int lowercase(const char *s) ;
+
 #endif // MONGOOSE_HEADER_INCLUDED
