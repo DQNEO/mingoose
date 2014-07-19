@@ -52,7 +52,6 @@
 #include <dirent.h>
 
 #include "request.h"
-#include "options.h"
 
 void mg_strlcpy(register char *dst, register const char *src, size_t n);
 char * mg_strndup(const char *ptr, size_t len);
@@ -483,5 +482,7 @@ int mg_snprintf(char *buf, size_t buflen,
     PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(3, 4);
 
 int get_option_index(const char *name) ;
+
+extern const char *config_options[];
 
 #endif // MONGOOSE_HEADER_INCLUDED
