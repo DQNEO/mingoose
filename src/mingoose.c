@@ -1454,7 +1454,7 @@ static void handle_delete_request(struct mg_connection *conn,
 // This function is called when the request is read, parsed and validated,
 // and Mongoose must decide what action to take: serve a file, or
 // a directory, or call embedded function, etcetera.
-static void handle_request(struct mg_connection *conn) {
+static void dispatch(struct mg_connection *conn) {
   struct mg_request_info *ri = &conn->request_info;
   char path[PATH_MAX];
   int uri_len;
@@ -1754,7 +1754,7 @@ static void process_new_connection(struct mg_connection *conn) {
     }
 
     if (ebuf[0] == '\0') {
-      handle_request(conn);
+      dispatch(conn);
       call_user(MG_REQUEST_END, conn, (void *) (long) conn->status_code);
       log_access(conn);
     }
