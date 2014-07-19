@@ -476,5 +476,9 @@ int lowercase(const char *s) ;
 
 int mg_strncasecmp(const char *s1, const char *s2, size_t len) ;
 int mg_strcasecmp(const char *s1, const char *s2) ;
+const char *mg_strcasestr(const char *big_str, const char *small_str);
+int mg_vsnprintf(char *buf, size_t buflen, const char *fmt, va_list ap);
+
+
 
 #endif // MONGOOSE_HEADER_INCLUDED

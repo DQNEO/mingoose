@@ -12,40 +12,6 @@ static struct mg_connection *create_fake_connection(struct mg_context *ctx) {
 }
 //-- end of src/util.c --
 //-- src/string.c --
-static const char *mg_strcasestr(const char *big_str, const char *small_str) {
-  int i, big_len = strlen(big_str), small_len = strlen(small_str);
-
-  for (i = 0; i <= big_len - small_len; i++) {
-    if (mg_strncasecmp(big_str + i, small_str, small_len) == 0) {
-      return big_str + i;
-    }
-  }
-
-  return NULL;
-}
-
-// Like snprintf(), but never returns negative value, or a value
-// that is larger than a supplied buffer.
-// Thanks to Adam Zeldis to pointing snprintf()-caused vulnerability
-// in his audit report.
-static int mg_vsnprintf(char *buf, size_t buflen, const char *fmt, va_list ap) {
-  int n;
-
-  if (buflen == 0) {
-    return 0;
-  }
-
-  n = vsnprintf(buf, buflen, fmt, ap);
-
-  if (n < 0) {
-    n = 0;
-  } else if (n >= (int) buflen) {
-    n = (int) buflen - 1;
-  }
-  buf[n] = '\0';
-
-  return n;
-}
 
 static int mg_snprintf(char *buf, size_t buflen,
     PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(3, 4);
