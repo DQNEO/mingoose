@@ -26,4 +26,3 @@ static const char *config_options[] = {
   NULL
 };
 
-int get_option_index(const char *name) ;

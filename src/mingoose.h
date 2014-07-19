@@ -482,4 +482,6 @@ int mg_vsnprintf(char *buf, size_t buflen, const char *fmt, va_list ap);
 int mg_snprintf(char *buf, size_t buflen,
     PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(3, 4);
 
+int get_option_index(const char *name) ;
+
 #endif // MONGOOSE_HEADER_INCLUDED
