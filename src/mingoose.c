@@ -1844,10 +1844,7 @@ static void *worker_thread(void *thread_func_param) {
       conn->request_info.remote_ip = ntohl(conn->request_info.remote_ip);
       conn->request_info.is_ssl = conn->client.is_ssl;
 
-      if (!conn->client.is_ssl
-         ) {
-        process_new_connection(conn);
-      }
+      process_new_connection(conn);
 
       close_connection(conn);
     }
