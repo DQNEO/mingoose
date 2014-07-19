@@ -85,3 +85,15 @@ int mg_vsnprintf(char *buf, size_t buflen, const char *fmt, va_list ap) {
 
   return n;
 }
+
+
+int mg_snprintf(char *buf, size_t buflen, const char *fmt, ...) {
+  va_list ap;
+  int n;
+
+  va_start(ap, fmt);
+  n = mg_vsnprintf(buf, buflen, fmt, ap);
+  va_end(ap);
+
+  return n;
+}

@@ -14,17 +14,6 @@ static struct mg_connection *create_fake_connection(struct mg_context *ctx) {
 //-- src/string.c --
 
 
-int mg_snprintf(char *buf, size_t buflen, const char *fmt, ...) {
-  va_list ap;
-  int n;
-
-  va_start(ap, fmt);
-  n = mg_vsnprintf(buf, buflen, fmt, ap);
-  va_end(ap);
-
-  return n;
-}
-
 
 // Return HTTP header value, or NULL if not found.
 static const char *get_header(const struct mg_request_info *ri,
