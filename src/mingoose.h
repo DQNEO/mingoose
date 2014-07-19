@@ -474,4 +474,7 @@ static struct mg_context *ctx;      // Set by start_mongoose()
 
 int lowercase(const char *s) ;
 
+int mg_strncasecmp(const char *s1, const char *s2, size_t len) ;
+int mg_strcasecmp(const char *s1, const char *s2) ;
+
 #endif // MONGOOSE_HEADER_INCLUDED

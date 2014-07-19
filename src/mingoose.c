@@ -12,30 +12,6 @@ static struct mg_connection *create_fake_connection(struct mg_context *ctx) {
 }
 //-- end of src/util.c --
 //-- src/string.c --
-
-
-static int mg_strncasecmp(const char *s1, const char *s2, size_t len) {
-  int diff = 0;
-
-  if (len > 0)
-    do {
-      diff = lowercase(s1++) - lowercase(s2++);
-    } while (diff == 0 && s1[-1] != '\0' && --len > 0);
-
-  return diff;
-}
-
-static int mg_strcasecmp(const char *s1, const char *s2) {
-  int diff;
-
-  do {
-    diff = lowercase(s1++) - lowercase(s2++);
-  } while (diff == 0 && s1[-1] != '\0');
-
-  return diff;
-}
-
-
 static const char *mg_strcasestr(const char *big_str, const char *small_str) {
   int i, big_len = strlen(big_str), small_len = strlen(small_str);
 
