@@ -52,6 +52,7 @@
 #include <dirent.h>
 
 #include "request.h"
+#include "string.h"
 
 #if !defined(_LARGEFILE_SOURCE)
 #define _LARGEFILE_SOURCE     // Enable 64-bit file offsets
