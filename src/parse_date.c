@@ -6,7 +6,7 @@ const char *month_names[] = {
 };
 
 // Convert month to the month number. Return -1 on error, or month number
-int get_month_index(const char *s) {
+static int get_month_index(const char *s) {
   int i;
 
   for (i = 0; i < (int) ARRAY_SIZE(month_names); i++)

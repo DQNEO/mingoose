@@ -483,7 +483,6 @@ int mg_snprintf(char *buf, size_t buflen,
 int get_option_index(const char *name) ;
 
 extern const char *config_options[];
-int get_month_index(const char *s);
 time_t parse_date_string(const char *datetime);
 
 #endif // MONGOOSE_HEADER_INCLUDED
