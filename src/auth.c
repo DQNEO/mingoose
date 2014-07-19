@@ -70,13 +70,13 @@ static FILE *open_auth_file(struct mg_connection *conn, const char *path) {
 
   if (gpass != NULL) {
     // Use global passwords file
-    fp = mg_fopen(gpass, "r");
+    fp = fopen(gpass, "r");
     // Important: using local struct file to test path for is_directory flag.
     // If filep is used, mg_stat() makes it appear as if auth file was opened.
   } else if (mg_stat(path, &file) && file.is_directory) {
     mg_snprintf(name, sizeof(name), "%s%c%s",
                 path, '/', PASSWORDS_FILE_NAME);
-    fp = mg_fopen(name, "r");
+    fp = fopen(name, "r");
   } else {
      // Try to find .htpasswd in requested directory.
     for (p = path, e = p + strlen(p) - 1; e > p; e--)
@@ -84,7 +84,7 @@ static FILE *open_auth_file(struct mg_connection *conn, const char *path) {
         break;
     mg_snprintf(name, sizeof(name), "%.*s%c%s",
                 (int) (e - p), p, '/', PASSWORDS_FILE_NAME);
-    fp = mg_fopen(name, "r");
+    fp = fopen(name, "r");
   }
 
   return fp;
@@ -196,7 +196,7 @@ int check_authorization(struct mg_connection *conn, const char *path) {
     if (!memcmp(conn->request_info.uri, uri_vec.ptr, uri_vec.len)) {
       mg_snprintf(fname, sizeof(fname), "%.*s",
                   (int) filename_vec.len, filename_vec.ptr);
-      fp = mg_fopen(fname, "r");
+      fp = fopen(fname, "r");
       break;
     }
   }
@@ -229,7 +229,7 @@ int is_authorized_for_put(struct mg_connection *conn) {
   FILE *fp;
   int ret = 0;
 
-  if (passfile != NULL && (fp = mg_fopen(passfile, "r")) != NULL) {
+  if (passfile != NULL && (fp = fopen(passfile, "r")) != NULL) {
     ret = authorize(conn, fp);
     fclose(fp);
   }

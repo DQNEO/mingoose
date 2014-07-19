@@ -129,10 +129,6 @@ int call_user(int type, struct mg_connection *conn, void *p) {
     0 : conn->ctx->event_handler(&conn->event);
 }
 
-FILE *mg_fopen(const char *path, const char *mode) {
-  return fopen(path, mode);
-}
-
 void sockaddr_to_string(char *buf, size_t len,
                                      const union usa *usa) {
   buf[0] = '\0';
@@ -876,7 +872,7 @@ static void handle_file_request(struct mg_connection *conn, const char *path,
     encoding = "Content-Encoding: gzip\r\n";
   }
 
-  if ((fp = mg_fopen(path, "rb")) == NULL) {
+  if ((fp = fopen(path, "rb")) == NULL) {
     send_http_error(conn, 500, http_500_error,
                     "fopen(%s): %s", path, strerror(ERRNO));
     return;
@@ -1147,7 +1143,7 @@ static void put_file(struct mg_connection *conn, const char *path) {
   } else if (rc == -1) {
     send_http_error(conn, 500, http_500_error,
                     "put_dir(%s): %s", path, strerror(ERRNO));
-  } else if ((fp = mg_fopen(path, "wb+")) == NULL) {
+  } else if ((fp = fopen(path, "wb+")) == NULL) {
     fclose(fp);
     send_http_error(conn, 500, http_500_error,
                     "fopen(%s): %s", path, strerror(ERRNO));
@@ -1198,7 +1194,7 @@ static void do_ssi_include(struct mg_connection *conn, const char *ssi,
     return;
   }
 
-  if ((fp = mg_fopen(path, "rb")) == NULL) {
+  if ((fp = fopen(path, "rb")) == NULL) {
     cry(conn, "Cannot open SSI #include: [%s]: fopen(%s): %s",
         tag, path, strerror(ERRNO));
   } else {
@@ -1297,7 +1293,7 @@ static void handle_ssi_file_request(struct mg_connection *conn,
   struct vec mime_vec;
   FILE *fp;
 
-  if ((fp = mg_fopen(path, "rb")) == NULL) {
+  if ((fp = fopen(path, "rb")) == NULL) {
     send_http_error(conn, 500, http_500_error, "fopen(%s): %s", path,
                     strerror(ERRNO));
   } else {
