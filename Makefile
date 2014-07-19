@@ -4,7 +4,6 @@
 # CFLAGS_EXTRA="-g -O0 -DNO_SSL_DL -llua -lcrypto -lssl" make linux
 #
 # Flags are:
-# -DHAVE_MD5              - use system md5 library (-2kb)
 # -DNDEBUG                - strip off all debug code (-5kb)
 # -DDEBUG                 - build debug version (very noisy) (+7kb)
 # -DNO_CGI                - disable CGI support (-5kb)
@@ -15,7 +14,7 @@
 # -DCRYPTO_LIB=\"libcrypto.so.<version>\" - use system versioned CRYPTO so
 
 PROG = mingoose
-CFLAGS = -std=c99 -W -Wall -pedantic -pthread -pipe -I. -I.. -g -O0 -DNO_SSL_DL -DNO_SSL -DNO_CGI -DHAVE_MD5 -ldl -lm -lssl
+CFLAGS = -std=c99 -W -Wall -pedantic -pthread -pipe -I. -I.. -g -O0 -DNO_SSL_DL -DNO_SSL -DNO_CGI -ldl -lm -lssl
 
 # Make sure that the compiler flags come last in the compilation string.
 # If not so, this can break some on some Linux distros which use
