@@ -500,6 +500,9 @@ int pull(FILE *fp, struct mg_connection *conn, char *buf, int len) ;
 int call_user(int type, struct mg_connection *conn, void *p) ;
 
 const char *suggest_connection_header(const struct mg_connection *conn);
+void sockaddr_to_string(char *buf, size_t len,
+                        const union usa *usa) ;
+
 
 
 #endif // MONGOOSE_HEADER_INCLUDED
