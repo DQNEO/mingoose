@@ -145,20 +145,6 @@ struct mg_context *mg_start(const char **configuration_options,
                             mg_event_handler_t func, void *user_data);
 void mg_stop(struct mg_context *);
 
-void mg_websocket_handshake(struct mg_connection *);
-int mg_websocket_read(struct mg_connection *, int *bits, char **data);
-int mg_websocket_write(struct mg_connection* conn, int opcode,
-                       const char *data, size_t data_len);
-// Websocket opcodes, from http://tools.ietf.org/html/rfc6455
-enum {
-  WEBSOCKET_OPCODE_CONTINUATION = 0x0,
-  WEBSOCKET_OPCODE_TEXT = 0x1,
-  WEBSOCKET_OPCODE_BINARY = 0x2,
-  WEBSOCKET_OPCODE_CONNECTION_CLOSE = 0x8,
-  WEBSOCKET_OPCODE_PING = 0x9,
-  WEBSOCKET_OPCODE_PONG = 0xa
-};
-
 const char *mg_get_option(const struct mg_context *ctx, const char *name);
 const char **mg_get_valid_option_names(void);
 int mg_modify_passwords_file(const char *passwords_file_name,
@@ -186,14 +172,6 @@ int mg_printf(struct mg_connection *,
 
 // Send contents of the entire file together with HTTP headers.
 void mg_send_file(struct mg_connection *conn, const char *path);
-
-
-// Read data from the remote end, return number of bytes read.
-// Return:
-//   0     connection has been closed by peer. No more data could be read.
-//   < 0   read error. No more data could be read from the connection.
-//   > 0   number of bytes read into the buffer.
-int mg_read(struct mg_connection *, void *buf, int len);
 
 
 // Get the value of particular HTTP header.
