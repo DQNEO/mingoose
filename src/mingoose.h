@@ -53,6 +53,7 @@
 
 #include <string.h>
 #include <ctype.h>
+#include <openssl/md5.h>
 
 #define ARRAY_SIZE(array) (sizeof(array) / sizeof(array[0]))
 
@@ -511,5 +512,12 @@ time_t parse_date_string(const char *datetime);
 
 int match_prefix(const char *pattern, int pattern_len, const char *str);
 
+const char *next_option(const char *list, struct vec *val,
+                        struct vec *eq_val) ;
+
+
+int check_authorization(struct mg_connection *conn, const char *path);
+void send_authorization_request(struct mg_connection *conn) ;
+int is_authorized_for_put(struct mg_connection *conn);
 
 #endif // MONGOOSE_HEADER_INCLUDED
