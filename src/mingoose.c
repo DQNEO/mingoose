@@ -2032,7 +2032,7 @@ static void WINCDECL signal_handler(int sig_num) {
   } else { exit_flag = sig_num; }
 }
 
-static void die(const char *fmt, ...) {
+void die(const char *fmt, ...) {
   va_list ap;
   char msg[200];
 
@@ -2063,36 +2063,14 @@ static void show_usage_and_exit(void) {
 }
 
 
-static char *sdup(const char *str) {
-  char *p;
-  if ((p = (char *) malloc(strlen(str) + 1)) != NULL) {
-    strcpy(p, str);
+static int event_handler(struct mg_event *event) {
+  if (event->type == MG_EVENT_LOG) {
+    printf("%s\n", (const char *) event->event_param);
   }
-  return p;
+  return 0;
 }
 
-static void set_option(char **options, const char *name, const char *value) {
-  int i;
-
-  for (i = 0; i < MAX_OPTIONS - 3; i++) {
-    if (options[i] == NULL) {
-      options[i] = sdup(name);
-      options[i + 1] = sdup(value);
-      options[i + 2] = NULL;
-      break;
-    } else if (!strcmp(options[i], name)) {
-      free(options[i + 1]);
-      options[i + 1] = sdup(value);
-      break;
-    }
-  }
-
-  if (i == MAX_OPTIONS - 3) {
-    die("%s", "Too many options specified");
-  }
-}
-
-static void process_command_line_arguments(char *argv[], char **options) {
+void process_command_line_arguments(char *argv[], char **options) {
   size_t i, cmd_line_opts_start = 1;
 
   // If we're under MacOS and started by launchd, then the second
@@ -2107,67 +2085,6 @@ static void process_command_line_arguments(char *argv[], char **options) {
       }
       set_option(options, &argv[i][1], argv[i + 1]);
     }
-  }
-}
-
-static int event_handler(struct mg_event *event) {
-  if (event->type == MG_EVENT_LOG) {
-    printf("%s\n", (const char *) event->event_param);
-  }
-  return 0;
-}
-
-static int is_path_absolute(const char *path) {
-  return path != NULL && path[0] == '/';
-}
-
-static char *get_option(char **options, const char *option_name) {
-  int i;
-
-  for (i = 0; options[i] != NULL; i++)
-    if (!strcmp(options[i], option_name))
-      return options[i + 1];
-
-  return NULL;
-}
-
-static void verify_document_root(char *path) {
-  struct stat st;
-
-  if (path != NULL && (stat(path, &st) != 0 || !S_ISDIR(st.st_mode) )  ) {
-    die("Invalid path for document_root: [%s]: %s.\nMake sure that path is either "
-        "absolute, or it is relative to mongoose executable.",
-        path, strerror(errno));
-  }
-}
-
-static void set_absolute_path(char *options[], const char *option_name,
-                              const char *path_to_mongoose_exe) {
-  char path[PATH_MAX], abs[PATH_MAX], *option_value;
-  const char *p;
-
-  // Check whether option is already set
-  option_value = get_option(options, option_name);
-
-  // If option is already set and it is an absolute path,
-  // leave it as it is -- it's already absolute.
-  if (option_value != NULL && !is_path_absolute(option_value)) {
-    // Not absolute. Use the directory where mongoose executable lives
-    // be the relative directory for everything.
-    // Extract mongoose executable directory into path.
-    if ((p = strrchr(path_to_mongoose_exe, DIRSEP)) == NULL) {
-      getcwd(path, sizeof(path));
-    } else {
-      snprintf(path, sizeof(path), "%.*s", (int) (p - path_to_mongoose_exe),
-               path_to_mongoose_exe);
-    }
-
-    strncat(path, "/", sizeof(path) - 1);
-    strncat(path, option_value, sizeof(path) - 1);
-
-    // Absolutize the path, and set the option
-    abs_path(path, abs, sizeof(abs));
-    set_option(options, option_name, abs);
   }
 }
 

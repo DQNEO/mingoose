@@ -504,5 +504,22 @@ void sockaddr_to_string(char *buf, size_t len,
 
 void log_access(const struct mg_connection *conn) ;
 
+void set_absolute_path(char *options[], const char *option_name,
+                       const char *path_to_mongoose_exe);
+
+void set_option(char **options, const char *name, const char *value) ;
+
+void process_command_line_arguments(char *argv[], char **options) ;
+
+void verify_document_root(char *path) ;
+char *get_option(char **options, const char *option_name) ;
+
+void set_option(char **options, const char *name, const char *value);
+
+
+void die(const char *fmt, ...) ;
+
+    
+
 
 #endif // MONGOOSE_HEADER_INCLUDED
