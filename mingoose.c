@@ -2050,7 +2050,6 @@ static void show_usage_and_exit(void) {
   fprintf(stderr, "Mingoose version %s (c) DQNEO, built on %s\n",
           mg_version(), __DATE__);
   fprintf(stderr, "Usage:\n");
-  fprintf(stderr, "  mingoose -A <htpasswd_file> <realm> <user> <passwd>\n");
   fprintf(stderr, "  mingoose [config_file]\n");
   fprintf(stderr, "  mingoose [-option value ...]\n");
   fprintf(stderr, "\nOPTIONS:\n");
@@ -2098,15 +2097,6 @@ int main(int argc, char *argv[]) {
 
   int i;
   const char *name, *value, *default_value;
-
-  // Edit passwords file if -A option is specified
-  if (argc > 1 && !strcmp(argv[1], "-A")) {
-    if (argc != 6) {
-      show_usage_and_exit();
-    }
-    exit(mg_modify_passwords_file(argv[2], argv[3], argv[4], argv[5]) ?
-         EXIT_SUCCESS : EXIT_FAILURE);
-  }
 
   // Show usage if -h or --help options are specified
   if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
