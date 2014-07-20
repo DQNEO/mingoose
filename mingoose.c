@@ -2068,7 +2068,7 @@ static int event_handler(struct mg_event *event) {
   return 0;
 }
 
-void process_command_line_arguments(char *argv[], char **options) {
+void set_options(char *argv[], char **options) {
   size_t i, cmd_line_opts_start = 1;
 
   //initialize
@@ -2108,7 +2108,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Update config based on command line arguments
-  process_command_line_arguments(argv, options);
+  set_options(argv, options);
 
   // Make sure we have absolute paths for files and directories
   // https://github.com/valenok/mongoose/issues/181
