@@ -2050,7 +2050,6 @@ static void show_usage_and_exit(void) {
   fprintf(stderr, "Mingoose version %s (c) DQNEO, built on %s\n",
           mg_version(), __DATE__);
   fprintf(stderr, "Usage:\n");
-  fprintf(stderr, "  mingoose [config_file]\n");
   fprintf(stderr, "  mingoose [-option value ...]\n");
   fprintf(stderr, "\nOPTIONS:\n");
 
