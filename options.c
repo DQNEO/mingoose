@@ -134,3 +134,26 @@ void set_absolute_path(char *options[], const char *option_name,
     set_option(options, option_name, abs);
   }
 }
+
+void set_options(char *argv[], char **options) {
+  size_t i, cmd_line_opts_start = 1;
+
+  //initialize
+  options[0] = NULL;
+  // set default document_root
+  set_option(options, "document_root", ".");
+
+  // If we're under MacOS and started by launchd, then the second
+  // argument is process serial number, -psn_.....
+  // In this case, don't process arguments at all.
+  if (argv[1] == NULL || memcmp(argv[1], "-psn_", 5) != 0) {
+    // Handle command line flags.
+    // They override config file and default settings.
+    for (i = cmd_line_opts_start; argv[i] != NULL; i += 2) {
+      if (argv[i][0] != '-' || argv[i + 1] == NULL) {
+        show_usage_and_exit();
+      }
+      set_option(options, &argv[i][1], argv[i + 1]);
+    }
+  }
+}
