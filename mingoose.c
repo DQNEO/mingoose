@@ -2071,6 +2071,11 @@ static int event_handler(struct mg_event *event) {
 void process_command_line_arguments(char *argv[], char **options) {
   size_t i, cmd_line_opts_start = 1;
 
+  //initialize
+  options[0] = NULL;
+  // set default document_root
+  set_option(options, "document_root", ".");
+
   // If we're under MacOS and started by launchd, then the second
   // argument is process serial number, -psn_.....
   // In this case, don't process arguments at all.
@@ -2101,9 +2106,6 @@ int main(int argc, char *argv[]) {
   if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
     show_usage_and_exit();
   }
-
-  options[0] = NULL;
-  set_option(options, "document_root", ".");
 
   // Update config based on command line arguments
   process_command_line_arguments(argv, options);
