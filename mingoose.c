@@ -2088,17 +2088,6 @@ int main(int argc, char *argv[]) {
   // Update config based on command line arguments
   set_options(argv, options);
 
-  // Make sure we have absolute paths for files and directories
-  // https://github.com/valenok/mongoose/issues/181
-  set_absolute_path(options, "document_root", argv[0]);
-  set_absolute_path(options, "put_delete_auth_file", argv[0]);
-  set_absolute_path(options, "access_log_file", argv[0]);
-  set_absolute_path(options, "error_log_file", argv[0]);
-  set_absolute_path(options, "global_auth_file", argv[0]);
-
-  // Make extra verification for certain options
-  verify_document_root(get_option(options, "document_root"));
-
   // Setup signal handler: quit on Ctrl-C
   signal(SIGTERM, signal_handler);
   signal(SIGINT, signal_handler);
