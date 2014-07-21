@@ -1959,31 +1959,12 @@ static int event_handler(struct mg_event *event) {
     return 0;
 }
 
-
-int main(int argc, char *argv[]) {
-
+/**
+ * argvとconfig_optionsをマージして
+ * ctxに設定値をセットする
+ */
+void set_options(struct mg_context * ctx, char *argv[]) {
     int i;
-    // Show usage if -h or --help options are specified
-    if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
-        show_usage_and_exit();
-    }
-
-    // Setup signal handler: quit on Ctrl-C
-    signal(SIGTERM, signal_handler);
-    signal(SIGINT, signal_handler);
-    signal(SIGCHLD, signal_handler);
-
-    // Start Mongoose
-
-    // Allocate context and initialize reasonable general case defaults.
-    // TODO(lsm): do proper error handling here.
-    if ((ctx = (struct mg_context *) calloc(1, sizeof(*ctx))) == NULL) {
-        die("%s", "Failed to start Mongoose.");
-    }
-    ctx->event_handler = event_handler;
-    ctx->user_data = NULL;
-
-
     const char *name, *value, *default_value;
 
 
@@ -2066,6 +2047,34 @@ int main(int argc, char *argv[]) {
     ctx->config[DOCUMENT_ROOT] = NULL;
     ctx->config[NUM_THREADS] = NULL;
     ctx->config[GLOBAL_PASSWORDS_FILE] = NULL;
+
+}
+
+
+int main(int argc, char *argv[]) {
+
+    int i;
+    // Show usage if -h or --help options are specified
+    if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
+        show_usage_and_exit();
+    }
+
+    // Setup signal handler: quit on Ctrl-C
+    signal(SIGTERM, signal_handler);
+    signal(SIGINT, signal_handler);
+    signal(SIGCHLD, signal_handler);
+
+    // Start Mongoose
+
+    // Allocate context and initialize reasonable general case defaults.
+    // TODO(lsm): do proper error handling here.
+    if ((ctx = (struct mg_context *) calloc(1, sizeof(*ctx))) == NULL) {
+        die("%s", "Failed to start Mongoose.");
+    }
+    ctx->event_handler = event_handler;
+    ctx->user_data = NULL;
+
+    set_options(ctx, argv);
 
     // NOTE(lsm): order is important here. SSL certificates must
     // be initialized before listening ports. UID must be set last.
