@@ -1577,9 +1577,6 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
 static int set_ports_option(struct mg_context *ctx) {
   const char *list = ctx->config[LISTENING_PORTS];
   int on = 1, success = 1;
-#if defined(USE_IPV6)
-  int off = 0;
-#endif
   struct vec vec;
   struct socket so, *ptr;
 
@@ -1594,11 +1591,6 @@ static int set_ports_option(struct mg_context *ctx) {
                // broadcast UDP sockets
                setsockopt(so.sock, SOL_SOCKET, SO_REUSEADDR,
                           (void *) &on, sizeof(on)) != 0 ||
-#if defined(USE_IPV6)
-               (so.lsa.sa.sa_family == AF_INET6 &&
-                setsockopt(so.sock, IPPROTO_IPV6, IPV6_V6ONLY, (void *) &off,
-                           sizeof(off)) != 0) ||
-#endif
                bind(so.sock, &so.lsa.sa, so.lsa.sa.sa_family == AF_INET ?
                     sizeof(so.lsa.sin) : sizeof(so.lsa)) != 0 ||
                listen(so.sock, SOMAXCONN) != 0) {
@@ -2124,6 +2116,7 @@ int main(int argc, char *argv[]) {
   }
 
   // Set default value if needed
+  // ここが何をやっているのか謎
   for (i = 0; config_options[i * 2] != NULL; i++) {
     default_value = config_options[i * 2 + 1];
     if (ctx->config[i] == NULL && default_value != NULL) {
