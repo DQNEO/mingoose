@@ -1576,11 +1576,11 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
 
 static int set_ports_option(struct mg_context *ctx) {
   const char *list = ctx->config[LISTENING_PORTS];
-  int on = 1, success = 1;
+  int on = 1;
   struct vec vec;
   struct socket so, *ptr;
 
-  while (success && (list = next_option(list, &vec, NULL)) != NULL) {
+  while ( (list = next_option(list, &vec, NULL)) != NULL) {
     if (!parse_port_string(&vec, &so)) {
       cry(create_fake_connection(ctx), "%s: %.*s: invalid port spec. Expecting list of: %s",
           __func__, (int) vec.len, vec.ptr, "[IP_ADDRESS:]PORT[s|r]");
@@ -1616,7 +1616,7 @@ static int set_ports_option(struct mg_context *ctx) {
     ctx->num_listening_sockets++;
   }
 
-  return success;
+  return 1;
 }
 
 // Verify given socket address against the ACL.
