@@ -59,20 +59,20 @@
 
 // This structure contains information about the HTTP request.
 struct mg_request_info {
-  const char *request_method; // "GET", "POST", etc
-  const char *uri;            // URL-decoded URI
-  const char *http_version;   // E.g. "1.0", "1.1"
-  const char *query_string;   // URL part after '?', not including '?', or NULL
-  const char *remote_user;    // Authenticated user, or NULL if no auth used
-  long remote_ip;             // Client's IP address
-  int remote_port;            // Client's port
-  int is_ssl;                 // 1 if SSL-ed, 0 if not
+    const char *request_method; // "GET", "POST", etc
+    const char *uri;            // URL-decoded URI
+    const char *http_version;   // E.g. "1.0", "1.1"
+    const char *query_string;   // URL part after '?', not including '?', or NULL
+    const char *remote_user;    // Authenticated user, or NULL if no auth used
+    long remote_ip;             // Client's IP address
+    int remote_port;            // Client's port
+    int is_ssl;                 // 1 if SSL-ed, 0 if not
 
-  int num_headers;            // Number of HTTP headers
-  struct mg_header {
-    const char *name;         // HTTP header name
-    const char *value;        // HTTP header value
-  } http_headers[64];         // Maximum 64 headers
+    int num_headers;            // Number of HTTP headers
+    struct mg_header {
+        const char *name;         // HTTP header name
+        const char *value;        // HTTP header value
+    } http_headers[64];         // Maximum 64 headers
 };
 
 int parse_http_message(char *buf, int len, struct mg_request_info *ri);
@@ -123,7 +123,7 @@ struct mg_connection;  // HTTP request descriptor
 
 
 struct mg_event {
-  int type;                   // Event type, possible types are defined below
+    int type;                   // Event type, possible types are defined below
 #define MG_REQUEST_BEGIN  1   // event_param: NULL
 #define MG_REQUEST_END    2   // event_param: NULL
 #define MG_HTTP_ERROR     3   // event_param: int status_code
@@ -131,12 +131,12 @@ struct mg_event {
 #define MG_THREAD_BEGIN   5   // event_param: NULL
 #define MG_THREAD_END     6   // event_param: NULL
 
-  void *user_data;            // User data pointer passed to mg_start()
-  void *conn_data;            // Connection-specific, per-thread user data.
-  void *event_param;          // Event-specific parameter
+    void *user_data;            // User data pointer passed to mg_start()
+    void *conn_data;            // Connection-specific, per-thread user data.
+    void *event_param;          // Event-specific parameter
 
-  struct mg_connection *conn;
-  struct mg_request_info *request_info;
+    struct mg_connection *conn;
+    struct mg_request_info *request_info;
 };
 
 typedef int (*mg_event_handler_t)(struct mg_event *event);
@@ -297,16 +297,16 @@ char *mg_md5(char buf[33], ...);
 #define DEBUG_TRACE(x)
 #else
 #if defined(DEBUG)
-#define DEBUG_TRACE(x) do { \
-  flockfile(stdout); \
-  printf("*** %lu.%p.%s.%d: ", \
-         (unsigned long) time(NULL), (void *) pthread_self(), \
-         __func__, __LINE__); \
-  printf x; \
-  putchar('\n'); \
-  fflush(stdout); \
-  funlockfile(stdout); \
-} while (0)
+#define DEBUG_TRACE(x) do {                                         \
+        flockfile(stdout);                                          \
+        printf("*** %lu.%p.%s.%d: ",                                \
+               (unsigned long) time(NULL), (void *) pthread_self(), \
+               __func__, __LINE__);                                 \
+        printf x;                                                   \
+        putchar('\n');                                              \
+        fflush(stdout);                                             \
+        funlockfile(stdout);                                        \
+    } while (0)
 #else
 #define DEBUG_TRACE(x)
 #endif // DEBUG
@@ -356,24 +356,24 @@ typedef int socklen_t;
 // Unified socket address. For IPv6 support, add IPv6 address structure
 // in the union u.
 union usa {
-  struct sockaddr sa;
-  struct sockaddr_in sin;
+    struct sockaddr sa;
+    struct sockaddr_in sin;
 };
 
 
 // Describes a string (chunk of memory).
 struct vec {
-  const char *ptr;
-  size_t len;
+    const char *ptr;
+    size_t len;
 };
 
 struct file {
-  int is_directory;
-  time_t modification_time;
-  int64_t size;
-  // set to 1 if the content is gzipped
-  // in which case we need a content-encoding: gzip header
-  int gzipped;
+    int is_directory;
+    time_t modification_time;
+    int64_t size;
+    // set to 1 if the content is gzipped
+    // in which case we need a content-encoding: gzip header
+    int gzipped;
 };
 #define STRUCT_FILE_INITIALIZER { 0, 0, 0, 0 }
 
@@ -381,23 +381,23 @@ struct file {
 // Describes listening socket, or socket which was accept()-ed by the master
 // thread and queued for future handling by the worker thread.
 struct socket {
-  SOCKET sock;          // Listening socket
-  union usa lsa;        // Local socket address
-  union usa rsa;        // Remote socket address
-  unsigned is_ssl:1;    // Is port SSL-ed
-  unsigned ssl_redir:1; // Is port supposed to redirect everything to SSL port
+    SOCKET sock;          // Listening socket
+    union usa lsa;        // Local socket address
+    union usa rsa;        // Remote socket address
+    unsigned is_ssl:1;    // Is port SSL-ed
+    unsigned ssl_redir:1; // Is port supposed to redirect everything to SSL port
 };
 
 
 // NOTE(lsm): this enum shoulds be in sync with the config_options.
 enum {
-  PUT_DELETE_PASSWORDS_FILE,
-  PROTECT_URI, AUTHENTICATION_DOMAIN, SSI_EXTENSIONS, THROTTLE,
-  ACCESS_LOG_FILE, ENABLE_DIRECTORY_LISTING, ERROR_LOG_FILE,
-  GLOBAL_PASSWORDS_FILE, INDEX_FILES, ENABLE_KEEP_ALIVE, ACCESS_CONTROL_LIST,
-  EXTRA_MIME_TYPES, LISTENING_PORTS, DOCUMENT_ROOT, SSL_CERTIFICATE,
-  NUM_THREADS, RUN_AS_USER, REWRITE, HIDE_FILES, REQUEST_TIMEOUT,
-  NUM_OPTIONS
+    PUT_DELETE_PASSWORDS_FILE,
+    PROTECT_URI, AUTHENTICATION_DOMAIN, SSI_EXTENSIONS, THROTTLE,
+    ACCESS_LOG_FILE, ENABLE_DIRECTORY_LISTING, ERROR_LOG_FILE,
+    GLOBAL_PASSWORDS_FILE, INDEX_FILES, ENABLE_KEEP_ALIVE, ACCESS_CONTROL_LIST,
+    EXTRA_MIME_TYPES, LISTENING_PORTS, DOCUMENT_ROOT, SSL_CERTIFICATE,
+    NUM_THREADS, RUN_AS_USER, REWRITE, HIDE_FILES, REQUEST_TIMEOUT,
+    NUM_OPTIONS
 };
 
 struct settings {
@@ -408,66 +408,66 @@ struct settings {
 };
 
 struct mg_context {
-  volatile int stop_flag;         // Should we stop event loop
-  SSL_CTX *ssl_ctx;               // SSL context
-  char *config[NUM_OPTIONS];      // Mongoose configuration parameters
-  struct settings settings;
-  mg_event_handler_t event_handler;  // User-defined callback function
-  void *user_data;                // User-defined data
+    volatile int stop_flag;         // Should we stop event loop
+    SSL_CTX *ssl_ctx;               // SSL context
+    char *config[NUM_OPTIONS];      // Mongoose configuration parameters
+    struct settings settings;
+    mg_event_handler_t event_handler;  // User-defined callback function
+    void *user_data;                // User-defined data
 
-  struct socket *listening_sockets;
-  int num_listening_sockets;
+    struct socket *listening_sockets;
+    int num_listening_sockets;
 
-  volatile int num_threads;  // Number of threads
-  pthread_mutex_t mutex;     // Protects (max|num)_threads
-  pthread_cond_t  cond;      // Condvar for tracking workers terminations
+    volatile int num_threads;  // Number of threads
+    pthread_mutex_t mutex;     // Protects (max|num)_threads
+    pthread_cond_t  cond;      // Condvar for tracking workers terminations
 
-  struct socket queue[MGSQLEN];   // Accepted sockets
-  volatile int sq_head;      // Head of the socket queue
-  volatile int sq_tail;      // Tail of the socket queue
-  pthread_cond_t sq_full;    // Signaled when socket is produced
-  pthread_cond_t sq_empty;   // Signaled when socket is consumed
+    struct socket queue[MGSQLEN];   // Accepted sockets
+    volatile int sq_head;      // Head of the socket queue
+    volatile int sq_tail;      // Tail of the socket queue
+    pthread_cond_t sq_full;    // Signaled when socket is produced
+    pthread_cond_t sq_empty;   // Signaled when socket is consumed
 };
 
 struct mg_connection {
-  struct mg_request_info request_info;
-  struct mg_event event;
-  struct mg_context *ctx;
-  SSL *ssl;                   // SSL descriptor
-  SSL_CTX *client_ssl_ctx;    // SSL context for client connections
-  struct socket client;       // Connected client
-  time_t birth_time;          // Time when request was received
-  int64_t num_bytes_sent;     // Total bytes sent to client
-  int64_t content_len;        // Content-Length header value
-  int64_t num_bytes_read;     // Bytes read from a remote socket
-  char *buf;                  // Buffer for received data
-  char *path_info;            // PATH_INFO part of the URL
-  int must_close;             // 1 if connection must be closed
-  int buf_size;               // Buffer size
-  int request_len;            // Size of the request + headers in a buffer
-  int data_len;               // Total size of data in a buffer
-  int status_code;            // HTTP reply status code, e.g. 200
-  int throttle;               // Throttling, bytes/sec. <= 0 means no throttle
-  time_t last_throttle_time;  // Last time throttled data was sent
-  int64_t last_throttle_bytes;// Bytes sent this second
+    struct mg_request_info request_info;
+    struct mg_event event;
+    struct mg_context *ctx;
+    SSL *ssl;                   // SSL descriptor
+    SSL_CTX *client_ssl_ctx;    // SSL context for client connections
+    struct socket client;       // Connected client
+    time_t birth_time;          // Time when request was received
+    int64_t num_bytes_sent;     // Total bytes sent to client
+    int64_t content_len;        // Content-Length header value
+    int64_t num_bytes_read;     // Bytes read from a remote socket
+    char *buf;                  // Buffer for received data
+    char *path_info;            // PATH_INFO part of the URL
+    int must_close;             // 1 if connection must be closed
+    int buf_size;               // Buffer size
+    int request_len;            // Size of the request + headers in a buffer
+    int data_len;               // Total size of data in a buffer
+    int status_code;            // HTTP reply status code, e.g. 200
+    int throttle;               // Throttling, bytes/sec. <= 0 means no throttle
+    time_t last_throttle_time;  // Last time throttled data was sent
+    int64_t last_throttle_bytes;// Bytes sent this second
 };
 
 // Directory entry
 struct de {
-  struct mg_connection *conn;
-  char *file_name;
-  struct file file;
+    struct mg_connection *conn;
+    char *file_name;
+    struct file file;
 };
 
 char *skip_quoted(char **buf, const char *delimiters,
-		  const char *whitespace, char quotechar);
+                  const char *whitespace, char quotechar);
 
 int mg_stat(const char *path, struct file *filep);
 void send_http_error(struct mg_connection *, int, const char *,
-                            PRINTF_FORMAT_STRING(const char *fmt), ...)
-                            PRINTF_ARGS(4, 5);
+                     PRINTF_FORMAT_STRING(const char *fmt), ...)
+    PRINTF_ARGS(4, 5);
 void cry(struct mg_connection *conn,
-                PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(2, 3);
+         PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(2, 3);
 int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len);
 int exit_flag;
 struct mg_context *ctx;      // Set by start_mongoose()
@@ -480,7 +480,7 @@ const char *mg_strcasestr(const char *big_str, const char *small_str);
 int mg_vsnprintf(char *buf, size_t buflen, const char *fmt, va_list ap);
 
 int mg_snprintf(char *buf, size_t buflen,
-    PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(3, 4);
+                PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(3, 4);
 
 int get_option_index(const char *name) ;
 
