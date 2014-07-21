@@ -169,10 +169,6 @@ int mg_printf(struct mg_connection *,
               PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(2, 3);
 
 
-// Send contents of the entire file together with HTTP headers.
-void mg_send_file(struct mg_connection *conn, const char *path);
-
-
 // Get the value of particular HTTP header.
 //
 // This is a helper function. It traverses request_info->http_headers array,

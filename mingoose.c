@@ -871,15 +871,6 @@ static void handle_file_request(struct mg_connection *conn, const char *path,
     fclose(fp);
 }
 
-void mg_send_file(struct mg_connection *conn, const char *path) {
-    struct file file = STRUCT_FILE_INITIALIZER;
-    if (mg_stat(path, &file)) {
-        handle_file_request(conn, path, &file);
-    } else {
-        send_http_error(conn, 404, "Not Found", "%s", "File not found");
-    }
-}
-
 // For given directory path, substitute it to valid index file.
 // Return 0 if index file has been found, -1 if not found.
 // If the file is found, it's stats is returned in stp.
