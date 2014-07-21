@@ -2133,6 +2133,7 @@ int main(int argc, char *argv[]) {
 
   ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
   ctx->settings.port  = atoi(ctx->config[LISTENING_PORTS]);
+  ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
 
   // NOTE(lsm): order is important here. SSL certificates must
   // be initialized before listening ports. UID must be set last.
@@ -2157,7 +2158,7 @@ int main(int argc, char *argv[]) {
   mg_start_thread(master_thread, ctx);
 
   // Start worker threads
-  for (i = 0; i < atoi(ctx->config[NUM_THREADS]); i++) {
+  for (i = 0; i < ctx->settings.num_threads; i++) {
     if (mg_start_thread(worker_thread, ctx) != 0) {
       cry(create_fake_connection(ctx), "Cannot start worker thread: %ld", (long) ERRNO);
     } else {

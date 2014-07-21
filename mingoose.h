@@ -403,6 +403,7 @@ enum {
 struct settings {
     char *document_root;
     int  port;
+    int  num_threads;
 };
 
 struct mg_context {
