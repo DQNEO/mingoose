@@ -1584,7 +1584,8 @@ static int set_ports_option(struct mg_context *ctx) {
     if (!parse_port_string(&vec, &so)) {
       cry(create_fake_connection(ctx), "%s: %.*s: invalid port spec. Expecting list of: %s",
           __func__, (int) vec.len, vec.ptr, "[IP_ADDRESS:]PORT[s|r]");
-      success = 0;
+      close_all_listening_sockets(ctx);
+      return 0;
     } else if ((so.sock = socket(so.lsa.sa.sa_family, SOCK_STREAM, 6)) ==
                INVALID_SOCKET ||
                // On Windows, SO_REUSEADDR is recommended only for
@@ -1597,22 +1598,22 @@ static int set_ports_option(struct mg_context *ctx) {
       cry(create_fake_connection(ctx), "%s: cannot bind to %.*s: %d (%s)", __func__,
           (int) vec.len, vec.ptr, ERRNO, strerror(errno));
       closesocket(so.sock);
-      success = 0;
+
+      close_all_listening_sockets(ctx);
+      return 0;
     } else if ((ptr = (struct socket *) realloc(ctx->listening_sockets,
                               (ctx->num_listening_sockets + 1) *
                               sizeof(ctx->listening_sockets[0]))) == NULL) {
       closesocket(so.sock);
-      success = 0;
+
+      close_all_listening_sockets(ctx);
+      return 0;
     } else {
       set_close_on_exec(so.sock);
       ctx->listening_sockets = ptr;
       ctx->listening_sockets[ctx->num_listening_sockets] = so;
       ctx->num_listening_sockets++;
     }
-  }
-
-  if (!success) {
-    close_all_listening_sockets(ctx);
   }
 
   return success;
