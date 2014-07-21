@@ -410,7 +410,7 @@ struct settings {
     char *document_root;
     int  port;
     int  num_threads;
-    char *passfile;
+    char *global_passwords_file;
 };
 
 struct mg_context {

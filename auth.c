@@ -64,7 +64,7 @@ static int check_password(const char *method, const char *ha1, const char *uri,
 // or search for .htpasswd in the requested directory.
 static FILE *open_auth_file(struct mg_connection *conn, const char *path) {
   char name[PATH_MAX];
-  const char *p, *e, *gpass = conn->ctx->config[GLOBAL_PASSWORDS_FILE];
+  const char *p, *e, *gpass = conn->ctx->settings.global_passwords_file;
   struct file file = STRUCT_FILE_INITIALIZER;
   FILE *fp = NULL;
 
