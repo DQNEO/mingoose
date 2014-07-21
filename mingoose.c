@@ -327,7 +327,7 @@ static int convert_uri_to_file_name(struct mg_connection *conn, char *buf,
                                     size_t buf_len, struct file *filep) {
     struct vec a, b;
     const char *rewrite, *uri = conn->request_info.uri,
-        *root = conn->ctx->config[DOCUMENT_ROOT];
+        *root = conn->ctx->settings.document_root;
     int match_len;
     char gz_path[PATH_MAX];
     char const* accept_encoding;
@@ -1414,7 +1414,7 @@ static void dispatch(struct mg_connection *conn) {
         // Do nothing, callback has served the request
     } else if (!strcmp(ri->request_method, "OPTIONS")) {
         handle_options_request(conn);
-    } else if (conn->ctx->config[DOCUMENT_ROOT] == NULL) {
+    } else if (conn->ctx->settings.document_root == NULL) {
         send_http_error(conn, 404, "Not Found", "Not Found");
     } else if (is_put_or_delete_request(conn) &&
                (is_authorized_for_put(conn) != 1)) {
@@ -2056,6 +2056,8 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%s = %s\n", config_options[i], ctx->config[i/2]);
 
     ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
+    ctx->config[DOCUMENT_ROOT] = NULL;
+
     ctx->settings.port  = atoi(ctx->config[LISTENING_PORTS]);
     ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
     ctx->settings.passfile = ctx->config[GLOBAL_PASSWORDS_FILE];
