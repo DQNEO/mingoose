@@ -2002,30 +2002,30 @@ int main(int argc, char *argv[]) {
 
     int cmd_line_opts_start = 1;
 
-  //initialize
-  options[0] = NULL;
-  // set default document_root
-  set_option(options, "document_root", ".");
+    //initialize
+    options[0] = NULL;
+    // set default document_root
+    set_option(options, "document_root", ".");
 
     // Handle command line flags.
     // They override config file and default settings.
     for (i = cmd_line_opts_start; argv[i] != NULL; i += 2) {
-      if (argv[i][0] != '-' || argv[i + 1] == NULL) {
-        show_usage_and_exit();
-      }
-      set_option(options, &argv[i][1], argv[i + 1]);
+        if (argv[i][0] != '-' || argv[i + 1] == NULL) {
+            show_usage_and_exit();
+        }
+        set_option(options, &argv[i][1], argv[i + 1]);
     }
 
-  // Make sure we have absolute paths for files and directories
-  // https://github.com/valenok/mongoose/issues/181
-  set_absolute_path(options, "document_root", argv[0]);
-  set_absolute_path(options, "put_delete_auth_file", argv[0]);
-  set_absolute_path(options, "access_log_file", argv[0]);
-  set_absolute_path(options, "error_log_file", argv[0]);
-  set_absolute_path(options, "global_auth_file", argv[0]);
+    // Make sure we have absolute paths for files and directories
+    // https://github.com/valenok/mongoose/issues/181
+    set_absolute_path(options, "document_root", argv[0]);
+    set_absolute_path(options, "put_delete_auth_file", argv[0]);
+    set_absolute_path(options, "access_log_file", argv[0]);
+    set_absolute_path(options, "error_log_file", argv[0]);
+    set_absolute_path(options, "global_auth_file", argv[0]);
 
-  // Make extra verification for certain options
-  verify_document_root(get_option(options, "document_root"));
+    // Make extra verification for certain options
+    verify_document_root(get_option(options, "document_root"));
 
 
     while (localoptions && (name = *localoptions++) != NULL) {
