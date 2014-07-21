@@ -400,10 +400,16 @@ enum {
   NUM_OPTIONS
 };
 
+struct settings {
+    char *document_root;
+    int  port;
+};
+
 struct mg_context {
   volatile int stop_flag;         // Should we stop event loop
   SSL_CTX *ssl_ctx;               // SSL context
   char *config[NUM_OPTIONS];      // Mongoose configuration parameters
+  struct settings settings;
   mg_event_handler_t event_handler;  // User-defined callback function
   void *user_data;                // User-defined data
 

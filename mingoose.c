@@ -2131,6 +2131,9 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
+  ctx->settings.port  = atoi(ctx->config[LISTENING_PORTS]);
+
   // NOTE(lsm): order is important here. SSL certificates must
   // be initialized before listening ports. UID must be set last.
   if (!set_gpass_option(ctx) ||
@@ -2170,10 +2173,10 @@ int main(int argc, char *argv[]) {
     die("%s", "Failed to start Mongoose.");
   }
 
-  printf("Mingoose v.%s started on port(s) %s with web root [%s]\n"
+  printf("Mingoose v.%s started on port(s) %d with web root [%s]\n"
          ,mg_version()
-         ,ctx->config[LISTENING_PORTS]
-         ,ctx->config[DOCUMENT_ROOT]
+         ,ctx->settings.port
+         ,ctx->settings.document_root
       );
 
   //enter into endless loop
