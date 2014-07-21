@@ -1467,10 +1467,6 @@ static void dispatch(struct mg_connection *conn) {
             send_http_error(conn, 403, "Directory Listing Denied",
                             "Directory listing denied");
         }
-    } else if (match_prefix(conn->ctx->config[SSI_EXTENSIONS],
-                            strlen(conn->ctx->config[SSI_EXTENSIONS]),
-                            path) > 0) {
-        exit(2);
     } else if (is_not_modified(conn, &file)) {
         send_http_error(conn, 304, "Not Modified", "%s", "");
     } else {
