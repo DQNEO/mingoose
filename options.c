@@ -13,7 +13,6 @@ const char *config_options[] = {
   "index_files",
     "index.html,index.htm,index.shtml,index.php,index.lp",
   "enable_keep_alive", "no",
-  "extra_mime_types", NULL,
   "listening_ports", "8080",
   "document_root",  NULL,
   "void", NULL,

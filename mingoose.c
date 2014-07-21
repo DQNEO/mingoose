@@ -472,25 +472,8 @@ const char *mg_get_builtin_mime_type(const char *path) {
 
 // Look at the "path" extension and figure what mime type it has.
 // Store mime type in the vector.
-static void get_mime_type(struct mg_context *ctx, const char *path,
+static void get_mime_type(const char *path,
                           struct vec *vec) {
-    struct vec ext_vec, mime_vec;
-    const char *list, *ext;
-    size_t path_len;
-
-    path_len = strlen(path);
-
-    // Scan user-defined mime types first, in case user wants to
-    // override default mime types.
-    list = ctx->config[EXTRA_MIME_TYPES];
-    while ((list = next_vector_eq(list, &ext_vec, &mime_vec)) != NULL) {
-        // ext now points to the path suffix
-        ext = path + path_len - ext_vec.len;
-        if (mg_strncasecmp(ext, ext_vec.ptr, ext_vec.len) == 0) {
-            *vec = mime_vec;
-            return;
-        }
-    }
 
     vec->ptr = mg_get_builtin_mime_type(path);
     vec->len = strlen(vec->ptr);
@@ -818,7 +801,7 @@ static void handle_file_request(struct mg_connection *conn, const char *path,
     char const* encoding = "";
     FILE *fp;
 
-    get_mime_type(conn->ctx, path, &mime_vec);
+    get_mime_type(path, &mime_vec);
     cl = filep->size;
     conn->status_code = 200;
     range[0] = '\0';
