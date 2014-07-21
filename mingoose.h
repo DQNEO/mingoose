@@ -116,7 +116,6 @@ char * mg_strdup(const char *str);
 #define INVALID_SOCKET (-1)
 #define INT64_FMT PRId64
 typedef int SOCKET;
-#define WINCDECL
 
 struct mg_context;     // Web server instance
 struct mg_connection;  // HTTP request descriptor
@@ -309,7 +308,6 @@ char *mg_md5(char buf[33], ...);
 #endif // DEBUG_TRACE
 
 #define DIRSEP '/'
-#define WINCDECL
 #define abs_path(rel, abs, abs_size) realpath((rel), (abs))
 
 

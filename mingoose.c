@@ -534,7 +534,7 @@ static void print_dir_entry(const struct de *de) {
 // sorting directory entries by size, or name, or modification time.
 // On windows, __cdecl specification is needed in case if project is built
 // with __stdcall convention. qsort always requires __cdels callback.
-static int WINCDECL compare_dir_entries(const void *p1, const void *p2) {
+static int compare_dir_entries(const void *p1, const void *p2) {
     const struct de *a = (const struct de *) p1, *b = (const struct de *) p2;
     const char *query_string = a->conn->request_info.query_string;
     int cmp_result = 0;
@@ -1910,7 +1910,7 @@ void mg_stop(struct mg_context *ctx) {
 // src/main.c
 
 
-static void WINCDECL signal_handler(int sig_num) {
+static void signal_handler(int sig_num) {
     // Reinstantiate signal handler
     signal(sig_num, signal_handler);
 
