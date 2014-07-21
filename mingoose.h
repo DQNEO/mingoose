@@ -145,7 +145,6 @@ struct mg_context *mg_start(const char **configuration_options,
                             mg_event_handler_t func, void *user_data);
 void mg_stop(struct mg_context *);
 
-const char *mg_get_option(const struct mg_context *ctx, const char *name);
 const char **mg_get_valid_option_names(void);
 int mg_modify_passwords_file(const char *passwords_file_name,
                              const char *domain,

@@ -39,17 +39,6 @@ int get_option_index(const char *name) {
   return -1;
 }
 
-const char *mg_get_option(const struct mg_context *ctx, const char *name) {
-  int i;
-  if ((i = get_option_index(name)) == -1) {
-    return NULL;
-  } else if (ctx->config[i] == NULL) {
-    return "";
-  } else {
-    return ctx->config[i];
-  }
-}
-
 static char *sdup(const char *str) {
   char *p;
   if ((p = (char *) malloc(strlen(str) + 1)) != NULL) {
