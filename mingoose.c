@@ -2070,8 +2070,6 @@ static int event_handler(struct mg_event *event) {
 
 
 int main(int argc, char *argv[]) {
-  snprintf(server_name, sizeof(server_name), "Mingoose web server v.%s",
-           mg_version());
 
   char *options[MAX_OPTIONS];
   const char **localoptions;
@@ -2172,8 +2170,8 @@ int main(int argc, char *argv[]) {
     die("%s", "Failed to start Mongoose.");
   }
 
-  printf("%s started on port(s) %s with web root [%s]\n"
-         ,server_name
+  printf("Mingoose v.%s started on port(s) %s with web root [%s]\n"
+         ,mg_version()
          ,ctx->config[LISTENING_PORTS]
          ,ctx->config[DOCUMENT_ROOT]
       );

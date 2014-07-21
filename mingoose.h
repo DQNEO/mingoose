@@ -462,7 +462,6 @@ void cry(struct mg_connection *conn,
                 PRINTF_FORMAT_STRING(const char *fmt), ...) PRINTF_ARGS(2, 3);
 int getreq(struct mg_connection *conn, char *ebuf, size_t ebuf_len);
 int exit_flag;
-char server_name[40];        // Set by init_server_name()
 struct mg_context *ctx;      // Set by start_mongoose()
 
 int lowercase(const char *s) ;
