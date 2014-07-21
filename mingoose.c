@@ -1963,8 +1963,6 @@ static int event_handler(struct mg_event *event) {
 int main(int argc, char *argv[]) {
 
     int i;
-    const char *name, *value, *default_value;
-
     // Show usage if -h or --help options are specified
     if (argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help"))) {
         show_usage_and_exit();
@@ -1984,6 +1982,10 @@ int main(int argc, char *argv[]) {
     }
     ctx->event_handler = event_handler;
     ctx->user_data = NULL;
+
+
+    const char *name, *value, *default_value;
+
 
     // Set default value if needed
     for (i = 0; config_options[i * 2] != NULL; i++) {
