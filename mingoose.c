@@ -2172,9 +2172,11 @@ int main(int argc, char *argv[]) {
     die("%s", "Failed to start Mongoose.");
   }
 
-  printf("%s started on port(s) %s with web root [%s]\n",
-         server_name, ctx->config[LISTENING_PORTS],
-         ctx->config[DOCUMENT_ROOT]);
+  printf("%s started on port(s) %s with web root [%s]\n"
+         ,server_name
+         ,ctx->config[LISTENING_PORTS]
+         ,ctx->config[DOCUMENT_ROOT]
+      );
 
   //enter into endless loop
   while (exit_flag == 0) {
