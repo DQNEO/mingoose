@@ -1580,7 +1580,8 @@ static int set_ports_option(struct mg_context *ctx) {
   struct vec vec;
   struct socket so, *ptr;
 
-  while ( (list = next_option(list, &vec, NULL)) != NULL) {
+  next_option(list, &vec, NULL);
+  
     if (!parse_port_string(&vec, &so)) {
       cry(create_fake_connection(ctx), "%s: %.*s: invalid port spec. Expecting list of: %s",
           __func__, (int) vec.len, vec.ptr, "[IP_ADDRESS:]PORT[s|r]");
@@ -1614,7 +1615,6 @@ static int set_ports_option(struct mg_context *ctx) {
     ctx->listening_sockets = ptr;
     ctx->listening_sockets[ctx->num_listening_sockets] = so;
     ctx->num_listening_sockets++;
-  }
 
   return 1;
 }
