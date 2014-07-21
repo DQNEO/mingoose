@@ -2047,10 +2047,14 @@ int main(int argc, char *argv[]) {
         DEBUG_TRACE(("[%s] -> [%s]", name, value));
     }
 
+    for (i = 0; options[i] != NULL; i++) {
+        free(options[i]);
+    }
+
 
     i = 34;
     fprintf(stderr, "%s = %s\n", config_options[i], ctx->config[i/2]);
-    exit(2);
+    //exit(2);
 
     ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
     ctx->settings.port  = atoi(ctx->config[LISTENING_PORTS]);
@@ -2085,10 +2089,6 @@ int main(int argc, char *argv[]) {
         } else {
             ctx->num_threads++;
         }
-    }
-
-    for (i = 0; options[i] != NULL; i++) {
-        free(options[i]);
     }
 
     if (ctx == NULL) {
