@@ -25,28 +25,29 @@ const char *next_option(const char *list, struct vec *val,
     if (list == NULL || *list == '\0') {
         // End of the list
         list = NULL;
-    } else {
-        val->ptr = list;
-        if ((list = strchr(val->ptr, ',')) != NULL) {
-            // Comma found. Store length and shift the list ptr
-            val->len = list - val->ptr;
-            list++;
-        } else {
-            // This value is the last one
-            list = val->ptr + strlen(val->ptr);
-            val->len = list - val->ptr;
-        }
+        return list;
+    }
 
-        if (eq_val != NULL) {
-            // Value has form "x=y", adjust pointers and lengths
-            // so that val points to "x", and eq_val points to "y".
-            eq_val->len = 0;
-            eq_val->ptr = (const char *) memchr(val->ptr, '=', val->len);
-            if (eq_val->ptr != NULL) {
-                eq_val->ptr++;  // Skip over '=' character
-                eq_val->len = val->ptr + val->len - eq_val->ptr;
-                val->len = (eq_val->ptr - val->ptr) - 1;
-            }
+    val->ptr = list;
+    if ((list = strchr(val->ptr, ',')) != NULL) {
+        // Comma found. Store length and shift the list ptr
+        val->len = list - val->ptr;
+        list++;
+    } else {
+        // This value is the last one
+        list = val->ptr + strlen(val->ptr);
+        val->len = list - val->ptr;
+    }
+
+    if (eq_val != NULL) {
+        // Value has form "x=y", adjust pointers and lengths
+        // so that val points to "x", and eq_val points to "y".
+        eq_val->len = 0;
+        eq_val->ptr = (const char *) memchr(val->ptr, '=', val->len);
+        if (eq_val->ptr != NULL) {
+            eq_val->ptr++;  // Skip over '=' character
+            eq_val->len = val->ptr + val->len - eq_val->ptr;
+            val->len = (eq_val->ptr - val->ptr) - 1;
         }
     }
 
