@@ -2022,6 +2022,10 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    i = 34;
+    fprintf(stderr, "%s = %s\n", config_options[i], ctx->config[i/2]);
+    exit(2);
+
     ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
     ctx->settings.port  = atoi(ctx->config[LISTENING_PORTS]);
     ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
