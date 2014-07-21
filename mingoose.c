@@ -1582,12 +1582,14 @@ static int set_ports_option(struct mg_context *ctx) {
 
   next_option(list, &vec, NULL);
   
-    if (!parse_port_string(&vec, &so)) {
+  if (!parse_port_string(&vec, &so)) {
       cry(create_fake_connection(ctx), "%s: %.*s: invalid port spec. Expecting list of: %s",
           __func__, (int) vec.len, vec.ptr, "[IP_ADDRESS:]PORT[s|r]");
       close_all_listening_sockets(ctx);
       return 0;
-    } else if ((so.sock = socket(so.lsa.sa.sa_family, SOCK_STREAM, 6)) ==
+  }
+
+    if ((so.sock = socket(so.lsa.sa.sa_family, SOCK_STREAM, 6)) ==
                INVALID_SOCKET ||
                // On Windows, SO_REUSEADDR is recommended only for
                // broadcast UDP sockets
@@ -1602,7 +1604,9 @@ static int set_ports_option(struct mg_context *ctx) {
 
       close_all_listening_sockets(ctx);
       return 0;
-    } else if ((ptr = (struct socket *) realloc(ctx->listening_sockets,
+    }
+
+    if ((ptr = (struct socket *) realloc(ctx->listening_sockets,
                               (ctx->num_listening_sockets + 1) *
                               sizeof(ctx->listening_sockets[0]))) == NULL) {
       closesocket(so.sock);
