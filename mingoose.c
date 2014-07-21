@@ -1583,33 +1583,6 @@ static int set_ports_option(struct mg_context *ctx) {
     return 1;
 }
 
-// Verify given socket address against the ACL.
-// Return -1 if ACL is malformed, 0 if address is disallowed, 1 if allowed.
-static int check_acl(struct mg_context *ctx, uint32_t remote_ip) {
-    int allowed, flag;
-    uint32_t net, mask;
-    struct vec vec;
-    const char *list = ctx->config[ACCESS_CONTROL_LIST];
-
-    // If any ACL is set, deny by default
-    allowed = list == NULL ? '+' : '-';
-
-    while ((list = next_vector(list, &vec)) != NULL) {
-        flag = vec.ptr[0];
-        if ((flag != '+' && flag != '-') ||
-            parse_net(&vec.ptr[1], &net, &mask) == 0) {
-            cry(create_fake_connection(ctx), "%s: subnet must be [+|-]x.x.x.x[/x]", __func__);
-            return -1;
-        }
-
-        if (net == (remote_ip & mask)) {
-            allowed = flag;
-        }
-    }
-
-    return allowed == '+';
-}
-
 static int set_uid_option(struct mg_context *ctx) {
     struct passwd *pw;
     const char *uid = ctx->config[RUN_AS_USER];
@@ -1642,11 +1615,6 @@ static int set_gpass_option(struct mg_context *ctx) {
     }
     return 1;
 }
-
-static int set_acl_option(struct mg_context *ctx) {
-    return check_acl(ctx, (uint32_t) 0x7f000001UL) != -1;
-}
-
 
 static void close_socket_gracefully(struct mg_connection *conn) {
     struct linger linger;
@@ -1852,15 +1820,11 @@ static int set_sock_timeout(SOCKET sock, int milliseconds) {
 static void accept_new_connection(const struct socket *listener,
                                   struct mg_context *ctx) {
     struct socket so;
-    char src_addr[IP_ADDR_STR_LEN];
     socklen_t len = sizeof(so.rsa);
     int on = 1;
 
     if ((so.sock = accept(listener->sock, &so.rsa.sa, &len)) == INVALID_SOCKET) {
-    } else if (!check_acl(ctx, ntohl(* (uint32_t *) &so.rsa.sin.sin_addr))) {
-        sockaddr_to_string(src_addr, sizeof(src_addr), &so.rsa);
-        cry(create_fake_connection(ctx), "%s: %s is not allowed to connect", __func__, src_addr);
-        closesocket(so.sock);
+    } else if (0) {
     } else {
         // Put so socket structure into the queue
         DEBUG_TRACE(("Accepted socket %d", (int) so.sock));
@@ -2098,8 +2062,7 @@ int main(int argc, char *argv[]) {
     // be initialized before listening ports. UID must be set last.
     if (!set_gpass_option(ctx) ||
         !set_ports_option(ctx) ||
-        !set_uid_option(ctx) ||
-        !set_acl_option(ctx)) {
+        !set_uid_option(ctx)) {
         free_context(ctx);
         die("%s", "Failed to start Mongoose.");
     }
