@@ -2000,8 +2000,6 @@ int main(int argc, char *argv[]) {
 
     // Update config based on command line arguments
 
-    int cmd_line_opts_start = 1;
-
     //initialize
     options[0] = NULL;
     // set default document_root
@@ -2009,7 +2007,7 @@ int main(int argc, char *argv[]) {
 
     // Handle command line flags.
     // They override config file and default settings.
-    for (i = cmd_line_opts_start; argv[i] != NULL; i += 2) {
+    for (i = 1; argv[i] != NULL; i += 2) {
         if (argv[i][0] != '-' || argv[i + 1] == NULL) {
             show_usage_and_exit();
         }
