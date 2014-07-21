@@ -1974,16 +1974,12 @@ int main(int argc, char *argv[]) {
         show_usage_and_exit();
     }
 
-    // Update config based on command line arguments
-    set_options(argv, options);
-
     // Setup signal handler: quit on Ctrl-C
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
     signal(SIGCHLD, signal_handler);
 
     // Start Mongoose
-
 
     // Allocate context and initialize reasonable general case defaults.
     // TODO(lsm): do proper error handling here.
@@ -1992,6 +1988,9 @@ int main(int argc, char *argv[]) {
     }
     ctx->event_handler = event_handler;
     ctx->user_data = NULL;
+
+    // Update config based on command line arguments
+    set_options(argv, options);
 
     while (localoptions && (name = *localoptions++) != NULL) {
         if ((i = get_option_index(name)) == -1) {
