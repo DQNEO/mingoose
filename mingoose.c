@@ -2056,7 +2056,7 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%s = %s\n", config_options[i], ctx->config[i/2]);
 
     ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
-    ctx->settings.port  = atoi(ctx->config[LISTENING_PORTS]);
+    ctx->settings.ports  = ctx->config[LISTENING_PORTS];
     ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
     ctx->settings.global_passwords_file = ctx->config[GLOBAL_PASSWORDS_FILE];
 
@@ -2098,9 +2098,9 @@ int main(int argc, char *argv[]) {
         die("%s", "Failed to start Mongoose.");
     }
 
-    printf("Mingoose v.%s started on port(s) %d with web root [%s]\n"
+    printf("Mingoose v.%s started on port(s) %s with web root [%s]\n"
            ,mg_version()
-           ,ctx->settings.port
+           ,ctx->settings.ports
            ,ctx->settings.document_root
         );
 

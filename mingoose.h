@@ -408,7 +408,7 @@ enum {
 
 struct settings {
     char *document_root;
-    int  port;
+    char *ports;
     int  num_threads;
     char *global_passwords_file;
 };
