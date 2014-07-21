@@ -143,10 +143,6 @@ void set_options(char *argv[], char **options) {
   // set default document_root
   set_option(options, "document_root", ".");
 
-  // If we're under MacOS and started by launchd, then the second
-  // argument is process serial number, -psn_.....
-  // In this case, don't process arguments at all.
-  if (argv[1] == NULL || memcmp(argv[1], "-psn_", 5) != 0) {
     // Handle command line flags.
     // They override config file and default settings.
     for (i = cmd_line_opts_start; argv[i] != NULL; i += 2) {
@@ -155,7 +151,6 @@ void set_options(char *argv[], char **options) {
       }
       set_option(options, &argv[i][1], argv[i + 1]);
     }
-  }
 
   // Make sure we have absolute paths for files and directories
   // https://github.com/valenok/mongoose/issues/181
