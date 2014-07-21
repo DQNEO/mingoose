@@ -2060,6 +2060,7 @@ int main(int argc, char *argv[]) {
     ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
     ctx->settings.global_passwords_file = ctx->config[GLOBAL_PASSWORDS_FILE];
 
+    ctx->config[LISTENING_PORTS] = NULL;
     ctx->config[DOCUMENT_ROOT] = NULL;
     ctx->config[NUM_THREADS] = NULL;
     ctx->config[GLOBAL_PASSWORDS_FILE] = NULL;
