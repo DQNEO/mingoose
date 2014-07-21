@@ -2175,6 +2175,8 @@ int main(int argc, char *argv[]) {
   printf("%s started on port(s) %s with web root [%s]\n",
          server_name, mg_get_option(ctx, "listening_ports"),
          mg_get_option(ctx, "document_root"));
+
+  //enter into endless loop
   while (exit_flag == 0) {
     sleep(1);
   }
