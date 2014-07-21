@@ -146,7 +146,35 @@ int match_prefix(const char *pattern, int pattern_len, const char *str) {
 // Value is stored in val vector. If value has form "x=y", then eq_val
 // vector is initialized to point to the "y" part, and val vector length
 // is adjusted to point only to "x".
-const char *next_vector(const char *list, struct vec *val,
+const char *next_vector(const char *list, struct vec *val) {
+
+    if (list == NULL || *list == '\0') {
+        // End of the list
+        list = NULL;
+        return list;
+    }
+
+    val->ptr = list;
+    if ((list = strchr(val->ptr, ',')) != NULL) {
+        // Comma found. Store length and shift the list ptr
+        val->len = list - val->ptr;
+        list++;
+    } else {
+        // This value is the last one
+        list = val->ptr + strlen(val->ptr);
+        val->len = list - val->ptr;
+    }
+
+    return list;
+}
+
+// A helper function for traversing a comma separated list of values.
+// It returns a list pointer shifted to the next value, or NULL if the end
+// of the list found.
+// Value is stored in val vector. If value has form "x=y", then eq_val
+// vector is initialized to point to the "y" part, and val vector length
+// is adjusted to point only to "x".
+const char *next_vector_eq(const char *list, struct vec *val,
                         struct vec *eq_val) {
     if (list == NULL || *list == '\0') {
         // End of the list
