@@ -404,6 +404,7 @@ struct settings {
     char *document_root;
     int  port;
     int  num_threads;
+    char *passfile;
 };
 
 struct mg_context {

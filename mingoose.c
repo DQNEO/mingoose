@@ -1678,7 +1678,7 @@ static int set_uid_option(struct mg_context *ctx) {
 
 static int set_gpass_option(struct mg_context *ctx) {
   struct file file = STRUCT_FILE_INITIALIZER;
-  const char *path = ctx->config[GLOBAL_PASSWORDS_FILE];
+  const char *path = ctx->settings.passfile;
   if (path != NULL && !mg_stat(path, &file)) {
     cry(create_fake_connection(ctx), "Cannot open %s: %s", path, strerror(ERRNO));
     return 0;
@@ -2134,6 +2134,7 @@ int main(int argc, char *argv[]) {
   ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
   ctx->settings.port  = atoi(ctx->config[LISTENING_PORTS]);
   ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
+  ctx->settings.passfile = ctx->config[GLOBAL_PASSWORDS_FILE];
 
   // NOTE(lsm): order is important here. SSL certificates must
   // be initialized before listening ports. UID must be set last.
