@@ -1989,6 +1989,14 @@ int main(int argc, char *argv[]) {
     ctx->event_handler = event_handler;
     ctx->user_data = NULL;
 
+    // Set default value if needed
+    for (i = 0; config_options[i * 2] != NULL; i++) {
+        default_value = config_options[i * 2 + 1];
+        if (ctx->config[i] == NULL && default_value != NULL) {
+            ctx->config[i] = mg_strdup(default_value);
+        }
+    }
+
     // Update config based on command line arguments
     set_options(argv, options);
 
@@ -2013,14 +2021,6 @@ int main(int argc, char *argv[]) {
         DEBUG_TRACE(("[%s] -> [%s]", name, value));
     }
 
-    // Set default value if needed
-    // ここが何をやっているのか謎
-    for (i = 0; config_options[i * 2] != NULL; i++) {
-        default_value = config_options[i * 2 + 1];
-        if (ctx->config[i] == NULL && default_value != NULL) {
-            ctx->config[i] = mg_strdup(default_value);
-        }
-    }
 
     i = 34;
     fprintf(stderr, "%s = %s\n", config_options[i], ctx->config[i/2]);
