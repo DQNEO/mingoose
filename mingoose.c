@@ -1608,12 +1608,12 @@ static int set_ports_option(struct mg_context *ctx) {
 
       close_all_listening_sockets(ctx);
       return 0;
-    } else {
-      set_close_on_exec(so.sock);
-      ctx->listening_sockets = ptr;
-      ctx->listening_sockets[ctx->num_listening_sockets] = so;
-      ctx->num_listening_sockets++;
     }
+
+    set_close_on_exec(so.sock);
+    ctx->listening_sockets = ptr;
+    ctx->listening_sockets[ctx->num_listening_sockets] = so;
+    ctx->num_listening_sockets++;
   }
 
   return success;
