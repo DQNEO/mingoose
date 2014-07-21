@@ -489,7 +489,7 @@ time_t parse_date_string(const char *datetime);
 
 int match_prefix(const char *pattern, int pattern_len, const char *str);
 
-const char *next_option(const char *list, struct vec *val,
+const char *next_vector(const char *list, struct vec *val,
                         struct vec *eq_val) ;
 
 

@@ -146,7 +146,7 @@ int match_prefix(const char *pattern, int pattern_len, const char *str) {
 // Value is stored in val vector. If value has form "x=y", then eq_val
 // vector is initialized to point to the "y" part, and val vector length
 // is adjusted to point only to "x".
-const char *next_option(const char *list, struct vec *val,
+const char *next_vector(const char *list, struct vec *val,
                         struct vec *eq_val) {
     if (list == NULL || *list == '\0') {
         // End of the list

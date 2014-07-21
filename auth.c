@@ -192,7 +192,7 @@ int check_authorization(struct mg_connection *conn, const char *path) {
   int authorized = 1;
 
   list = conn->ctx->config[PROTECT_URI];
-  while ((list = next_option(list, &uri_vec, &filename_vec)) != NULL) {
+  while ((list = next_vector(list, &uri_vec, &filename_vec)) != NULL) {
     if (!memcmp(conn->request_info.uri, uri_vec.ptr, uri_vec.len)) {
       mg_snprintf(fname, sizeof(fname), "%.*s",
                   (int) filename_vec.len, filename_vec.ptr);

@@ -343,7 +343,7 @@ static int convert_uri_to_file_name(struct mg_connection *conn, char *buf,
     mg_snprintf(buf, buf_len - 1, "%s%s", root, uri);
 
     rewrite = conn->ctx->config[REWRITE];
-    while ((rewrite = next_option(rewrite, &a, &b)) != NULL) {
+    while ((rewrite = next_vector(rewrite, &a, &b)) != NULL) {
         if ((match_len = match_prefix(a.ptr, a.len, uri)) > 0) {
             mg_snprintf(buf, buf_len - 1, "%.*s%s", (int) b.len, b.ptr,
                         uri + match_len);
@@ -483,7 +483,7 @@ static void get_mime_type(struct mg_context *ctx, const char *path,
     // Scan user-defined mime types first, in case user wants to
     // override default mime types.
     list = ctx->config[EXTRA_MIME_TYPES];
-    while ((list = next_option(list, &ext_vec, &mime_vec)) != NULL) {
+    while ((list = next_vector(list, &ext_vec, &mime_vec)) != NULL) {
         // ext now points to the path suffix
         ext = path + path_len - ext_vec.len;
         if (mg_strncasecmp(ext, ext_vec.ptr, ext_vec.len) == 0) {
@@ -918,7 +918,7 @@ static int substitute_index_file(struct mg_connection *conn, char *path,
 
     // Traverse index files list. For each entry, append it to the given
     // path and see if the file exists. If it exists, break the loop
-    while ((list = next_option(list, &filename_vec, NULL)) != NULL) {
+    while ((list = next_vector(list, &filename_vec, NULL)) != NULL) {
 
         // Ignore too long entries that may overflow path buffer
         if (filename_vec.len > path_len - (n + 2))
@@ -1220,7 +1220,7 @@ static int set_throttle(const char *spec, uint32_t remote_ip, const char *uri) {
     char mult;
     double v;
 
-    while ((spec = next_option(spec, &vec, &val)) != NULL) {
+    while ((spec = next_vector(spec, &vec, &val)) != NULL) {
         mult = ',';
         if (sscanf(val.ptr, "%lf%c", &v, &mult) < 1 || v < 0 ||
             (lowercase(&mult) != 'k' && lowercase(&mult) != 'm' && mult != ',')) {
@@ -1540,7 +1540,7 @@ static int set_ports_option(struct mg_context *ctx) {
     struct vec vec;
     struct socket so, *ptr;
 
-    next_option(list, &vec, NULL);
+    next_vector(list, &vec, NULL);
   
     if (!parse_port_string(&vec, &so)) {
         cry(create_fake_connection(ctx), "%s: %.*s: invalid port spec. Expecting list of: %s",
@@ -1594,7 +1594,7 @@ static int check_acl(struct mg_context *ctx, uint32_t remote_ip) {
     // If any ACL is set, deny by default
     allowed = list == NULL ? '+' : '-';
 
-    while ((list = next_option(list, &vec, NULL)) != NULL) {
+    while ((list = next_vector(list, &vec, NULL)) != NULL) {
         flag = vec.ptr[0];
         if ((flag != '+' && flag != '-') ||
             parse_net(&vec.ptr[1], &net, &mask) == 0) {
