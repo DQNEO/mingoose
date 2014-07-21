@@ -532,7 +532,6 @@ void set_option(char **options, const char *name, const char *value);
 
 void die(const char *fmt, ...) ;
 
-void set_options(char *argv[], char **options) ;
 void show_usage_and_exit(void) ;
 
 
