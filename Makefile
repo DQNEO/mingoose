@@ -14,7 +14,7 @@
 # -DCRYPTO_LIB=\"libcrypto.so.<version>\" - use system versioned CRYPTO so
 
 PROG = mingoose
-CFLAGS = -std=c99 -W -Wall -pedantic -pthread -g -O0 -DNO_SSL_DL -DNO_SSL -DNO_CGI -ldl -lm -lssl
+CFLAGS = -std=c99 -W -Wall -pedantic -pthread -g -O0 -DNO_SSL_DL -DNO_SSL -DNO_CGI -DDEBUG -ldl -lm -lssl
 
 # Make sure that the compiler flags come last in the compilation string.
 # If not so, this can break some on some Linux distros which use
