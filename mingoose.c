@@ -1482,9 +1482,6 @@ static int parse_port_string(const char *ptr, struct socket *so) {
     }
 
     ch = ptr[len];  // Next character after the port number
-
-    DEBUG_TRACE(("ch=%c", ch));
-
     // Make sure the port is valid and string ends with '\0'
     return is_valid_port(port) && (ch == '\0');
 }
