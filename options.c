@@ -31,6 +31,9 @@ int get_option_index(const char *name) {
       return i;
     }
   }
+
+  die("invalid option key:%s", name);
+  
   return -1; // not found
 }
 
