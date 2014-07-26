@@ -1539,21 +1539,23 @@ static int mg_setuid(struct mg_context *ctx) {
     if (uid == NULL) {
         return 1;
     }
-        pw = getpwnam(uid);
-        if (pw == NULL) {
-            cry(create_fake_connection(ctx), "%s: unknown user [%s]", __func__, uid);
-            return 0;
-        }
 
-        if (setgid(pw->pw_gid) == -1) {
-            cry(create_fake_connection(ctx), "%s: setgid(%s): %s", __func__, uid, strerror(errno));
-            return 0;
-        }
+    pw = getpwnam(uid);
 
-        if (setuid(pw->pw_uid) == -1) {
-            cry(create_fake_connection(ctx), "%s: setuid(%s): %s", __func__, uid, strerror(errno));
-            return 0;
-        }
+    if (pw == NULL) {
+        cry(create_fake_connection(ctx), "%s: unknown user [%s]", __func__, uid);
+        return 0;
+    }
+
+    if (setgid(pw->pw_gid) == -1) {
+        cry(create_fake_connection(ctx), "%s: setgid(%s): %s", __func__, uid, strerror(errno));
+        return 0;
+    }
+
+    if (setuid(pw->pw_uid) == -1) {
+        cry(create_fake_connection(ctx), "%s: setuid(%s): %s", __func__, uid, strerror(errno));
+        return 0;
+    }
 
     return success;
 }
