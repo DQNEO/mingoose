@@ -1696,7 +1696,8 @@ static void accept_new_connection(const struct socket *listener,
     socklen_t len = sizeof(so.rsa);
     int on = 1;
 
-    if ((so.sock = accept(listener->sock, &so.rsa.sa, &len)) == INVALID_SOCKET) {
+    so.sock = accept(listener->sock, &so.rsa.sa, &len);
+    if (so.sock == INVALID_SOCKET) {
     } else if (0) {
     } else {
         // Put so socket structure into the queue
