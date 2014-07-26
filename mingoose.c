@@ -1466,9 +1466,6 @@ static int is_valid_port(unsigned int port) {
 static int parse_port_string(const struct vec *vec, struct socket *so) {
     unsigned int a, b, c, d, ch, port;
     int len;
-#if defined(USE_IPV6)
-    char buf[100];
-#endif
 
     // MacOS needs that. If we do not zero it, subsequent bind() will fail.
     // Also, all-zeroes in the socket address means binding to all addresses
@@ -1480,14 +1477,6 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
         // Bind to a specific IPv4 address, e.g. 192.168.1.5:8080
         so->lsa.sin.sin_addr.s_addr = htonl((a << 24) | (b << 16) | (c << 8) | d);
         so->lsa.sin.sin_port = htons((uint16_t) port);
-#if defined(USE_IPV6)
-
-    } else if (sscanf(vec->ptr, "[%49[^]]]:%d%n", buf, &port, &len) == 2 &&
-               inet_pton(AF_INET6, buf, &so->lsa.sin6.sin6_addr)) {
-        // IPv6 address, e.g. [3ffe:2a00:100:7031::1]:8080
-        so->lsa.sin6.sin6_family = AF_INET6;
-        so->lsa.sin6.sin6_port = htons((uint16_t) port);
-#endif
     } else if (sscanf(vec->ptr, "%u%n", &port, &len) == 1) {
         // If only port is specified, bind to IPv4, INADDR_ANY
         so->lsa.sin.sin_port = htons((uint16_t) port);
