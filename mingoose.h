@@ -411,6 +411,9 @@ struct settings {
     char *ports;
     int  num_threads;
     char *global_passwords_file;
+    char *put_delete_auth_file;
+    char *access_log_file;
+    char *error_log_file;
 };
 
 struct mg_context {

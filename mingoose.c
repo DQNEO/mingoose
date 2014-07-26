@@ -2030,12 +2030,19 @@ void set_options(struct mg_context * ctx, char *argv[]) {
         free(options[i]);
     }
 
+    ctx->settings.put_delete_auth_file = ctx->config[PUT_DELETE_PASSWORDS_FILE];
+    ctx->settings.access_log_file =  ctx->config[ACCESS_LOG_FILE];
+    ctx->settings.error_log_file = ctx->config[ERROR_LOG_FILE];
     ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
     ctx->settings.ports  = ctx->config[LISTENING_PORTS];
     ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
     ctx->settings.global_passwords_file = ctx->config[GLOBAL_PASSWORDS_FILE];
 
     ctx->settings.document_root = get_absolute_path(ctx->settings.document_root, argv[0]);
+    ctx->settings.put_delete_auth_file = get_absolute_path(ctx->settings.put_delete_auth_file,argv[0]);
+    ctx->settings.access_log_file = get_absolute_path(ctx->settings.access_log_file,argv[0]);
+    ctx->settings.error_log_file = get_absolute_path(ctx->settings.error_log_file,argv[0]);
+    ctx->settings.global_passwords_file = get_absolute_path(ctx->settings.global_passwords_file,argv[0]);
 
     // Make extra verification for certain options
     verify_document_root(ctx->settings.document_root);

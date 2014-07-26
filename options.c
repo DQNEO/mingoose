@@ -158,7 +158,7 @@ char * get_absolute_path(char *relpath,
 
   // Absolutize the path, and set the option
   abs_path(path, abs, sizeof(abs));
-
+  free(relpath);
   return sdup(abs);
 }
 
