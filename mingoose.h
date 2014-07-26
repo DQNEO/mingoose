@@ -520,6 +520,9 @@ void die(const char *fmt, ...) ;
 
 void show_usage_and_exit(void) ;
 
+void set_options(struct mg_context * ctx, char *argv[]);
+struct mg_connection *create_fake_connection(struct mg_context *ctx) ;
+void free_context(struct mg_context *ctx) ;
 
 
 #endif // MONGOOSE_HEADER_INCLUDED
