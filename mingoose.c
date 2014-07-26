@@ -1553,7 +1553,7 @@ static int set_ports_option(struct mg_context *ctx) {
     return 1;
 }
 
-static int set_uid_option(struct mg_context *ctx) {
+static int mg_setuid(struct mg_context *ctx) {
     struct passwd *pw;
     const char *uid = ctx->config[op("run_as_user")];
     int success = 0;
@@ -1989,7 +1989,7 @@ int main(int argc, char *argv[]) {
     // be initialized before listening ports. UID must be set last.
     if (!set_gpass_option(ctx) ||
         !set_ports_option(ctx) ||
-        !set_uid_option(ctx)) {
+        !mg_setuid(ctx)) {
         free_context(ctx);
         die("%s", "Failed to start Mongoose.");
     }
