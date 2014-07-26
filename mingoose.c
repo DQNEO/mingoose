@@ -1963,17 +1963,19 @@ static int event_handler(struct mg_event *event) {
  * argvとconfig_optionsをマージして
  * ctxに設定値をセットする
  */
+int op(char *);
+
 void set_options(struct mg_context * ctx, char *argv[]) {
     int i;
     const char *name, *value;
 
-    ctx->config[2]  = mg_strdup("mydomain.com");
-    ctx->config[5]  = mg_strdup("yes");
-    ctx->config[8]  = mg_strdup("index.html,index.htm,index.shtml,index.php,index.lp");
-    ctx->config[9]  = mg_strdup("no");
-    ctx->config[10] = mg_strdup("8080");
-    ctx->config[12] = mg_strdup("5");
-    ctx->config[16] = mg_strdup("30000");
+    ctx->config[op("authentication_domain")]  = mg_strdup("mydomain.com");
+    ctx->config[op("enable_directory_listing")]  = mg_strdup("yes");
+    ctx->config[op("index_files")]  = mg_strdup("index.html,index.htm,index.shtml,index.php,index.lp");
+    ctx->config[op("enable_keep_alive")]  = mg_strdup("no");
+    ctx->config[op("listening_ports")] = mg_strdup("8080");
+    ctx->config[op("num_threads")] = mg_strdup("5");
+    ctx->config[op("request_timeout_ms")] = mg_strdup("30000");
 
     char *options[MAX_OPTIONS];
     const char **localoptions;
