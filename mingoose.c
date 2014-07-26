@@ -1576,7 +1576,7 @@ static int mg_setuid(struct mg_context *ctx) {
 }
 
 
-static int set_gpass_option(struct mg_context *ctx) {
+static int check_globalpassfile(struct mg_context *ctx) {
     struct file file = STRUCT_FILE_INITIALIZER;
     const char *path = ctx->settings.global_passwords_file;
     if (path != NULL && !mg_stat(path, &file)) {
@@ -1987,7 +1987,7 @@ int main(int argc, char *argv[]) {
 
     // NOTE(lsm): order is important here. SSL certificates must
     // be initialized before listening ports. UID must be set last.
-    if (!set_gpass_option(ctx) ||
+    if (!check_globalpassfile(ctx) ||
         !set_ports_option(ctx) ||
         !mg_setuid(ctx)) {
         free_context(ctx);
