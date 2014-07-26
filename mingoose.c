@@ -2007,9 +2007,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     set_absolute_path(options, "error_log_file", argv[0]);
     set_absolute_path(options, "global_auth_file", argv[0]);
 
-    // Make extra verification for certain options
-    verify_document_root(get_option(options, "document_root"));
-
     const char **localoptions;
     localoptions = (const char **)options;
 
@@ -2039,6 +2036,9 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     ctx->settings.ports  = ctx->config[LISTENING_PORTS];
     ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
     ctx->settings.global_passwords_file = ctx->config[GLOBAL_PASSWORDS_FILE];
+
+    // Make extra verification for certain options
+    verify_document_root(ctx->settings.document_root);
 
     ctx->config[LISTENING_PORTS] = NULL;
     ctx->config[DOCUMENT_ROOT] = NULL;
