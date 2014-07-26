@@ -1963,8 +1963,6 @@ static int event_handler(struct mg_event *event) {
  * argvとconfig_optionsをマージして
  * ctxに設定値をセットする
  */
-int op(char *);
-
 void set_options(struct mg_context * ctx, char *argv[]) {
     int i;
     const char *name, *value;

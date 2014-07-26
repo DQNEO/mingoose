@@ -405,6 +405,8 @@ enum {
     NUM_OPTIONS
 };
 
+int op(const char *);
+
 struct settings {
     char *put_delete_auth_file;
     char *protect_uri;
