@@ -32,7 +32,7 @@ int get_option_index(const char *name) {
       return i;
     }
   }
-  return -1;
+  return -1; // not found
 }
 
 static char *sdup(const char *str) {
