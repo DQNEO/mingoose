@@ -1493,7 +1493,7 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
         (ch == '\0' || ch == 's' || ch == 'r' || ch == ',');
 }
 
-static int set_ports_option(struct mg_context *ctx) {
+static int set_port(struct mg_context *ctx) {
     int on = 1;
     struct vec vec;
     struct socket so, *ptr;
@@ -1976,7 +1976,7 @@ int main(int argc, char *argv[]) {
     // NOTE(lsm): order is important here. SSL certificates must
     // be initialized before listening ports. UID must be set last.
     if (!check_globalpassfile(ctx) ||
-        !set_ports_option(ctx) ||
+        !set_port(ctx) ||
         !mg_setuid(ctx)) {
         free_context(ctx);
         die("%s", "Failed to start Mongoose.");
