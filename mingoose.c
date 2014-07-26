@@ -1921,7 +1921,7 @@ int main(int argc, char *argv[]) {
     while (exit_flag == 0) {
         sleep(1);
     }
-    printf("Exiting on signal %d, waiting for all threads to finish...",
+    printf("Exiting on signal[%d], waiting for all threads to finish...",
            exit_flag);
     fflush(stdout);
     mg_stop(ctx);
