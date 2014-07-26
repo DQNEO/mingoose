@@ -1487,7 +1487,7 @@ static int parse_port_string(const char *ptr, struct socket *so) {
 
 static int set_port(struct mg_context *ctx) {
     int on = 1;
-    struct socket so, *ptr;
+    struct socket so;
 
     if (!parse_port_string(ctx->settings.ports, &so)) {
         cry(create_fake_connection(ctx), "%s: %s: invalid port spec. Expecting : %s",
