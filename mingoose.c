@@ -2028,10 +2028,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
             die("%s", "Failed to start Mongoose.");
         }
 
-        if (ctx->config[i] != NULL) {
-            cry(create_fake_connection(ctx), "warning: %s: duplicate option", name);
-            free(ctx->config[i]);
-        }
         ctx->config[i] = mg_strdup(value);
         DEBUG_TRACE(("[%s] -> [%s]", name, value));
     }
