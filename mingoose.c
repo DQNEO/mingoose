@@ -1539,7 +1539,6 @@ static int mg_setuid(struct mg_context *ctx) {
     if (uid == NULL) {
         return 1;
     }
-    else {
         pw = getpwnam(uid);
         if (pw == NULL) {
             cry(create_fake_connection(ctx), "%s: unknown user [%s]", __func__, uid);
@@ -1554,10 +1553,7 @@ static int mg_setuid(struct mg_context *ctx) {
         if (setuid(pw->pw_uid) == -1) {
             cry(create_fake_connection(ctx), "%s: setuid(%s): %s", __func__, uid, strerror(errno));
             return 0;
-        } else {
-            success = 1;
         }
-    }
 
     return success;
 }
