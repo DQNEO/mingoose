@@ -15,8 +15,8 @@ void cry(struct mg_connection *conn, const char *fmt, ...) {
   // I suppose this is fine, since function cannot disappear in the
   // same way string option can.
   if (call_user(MG_EVENT_LOG, conn, buf) == 0) {
-    fp = conn->ctx == NULL || conn->ctx->config[ERROR_LOG_FILE] == NULL ? NULL :
-      fopen(conn->ctx->config[ERROR_LOG_FILE], "a+");
+    fp = conn->ctx == NULL || conn->ctx->settings.error_log_file == NULL ? NULL :
+      fopen(conn->ctx->settings.error_log_file, "a+");
 
     if (fp != NULL) {
       flockfile(fp);
@@ -56,8 +56,8 @@ void log_access(const struct mg_connection *conn) {
   FILE *fp;
   char date[64], src_addr[IP_ADDR_STR_LEN];
 
-  fp = conn->ctx->config[ACCESS_LOG_FILE] == NULL ?  NULL :
-    fopen(conn->ctx->config[ACCESS_LOG_FILE], "a+");
+  fp = conn->ctx->settings.access_log_file == NULL ?  NULL :
+    fopen(conn->ctx->settings.access_log_file, "a+");
 
   if (fp == NULL)
     return;
