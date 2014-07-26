@@ -2,24 +2,24 @@
 
 // This array must be in sync with enum in internal.h
 const char *config_options[] = {
-  "put_delete_auth_file", NULL,
-  "protect_uri", NULL,
-  "authentication_domain", NULL,
-  "throttle", NULL,
-  "access_log_file", NULL,
-  "enable_directory_listing", NULL,
-  "error_log_file", NULL,
-  "global_auth_file", NULL,
-  "index_files", NULL,
-  "enable_keep_alive", NULL,
-  "listening_ports", NULL,
-  "document_root",  NULL,
-  "void", NULL,
-  "num_threads", NULL,
-  "run_as_user", NULL,
-  "url_rewrite_patterns", NULL,
-  "hide_files_patterns", NULL,
-  "request_timeout_ms", NULL,
+  "put_delete_auth_file",
+  "protect_uri",
+  "authentication_domain",
+  "throttle",
+  "access_log_file",
+  "enable_directory_listing",
+  "error_log_file",
+  "global_auth_file",
+  "index_files",
+  "enable_keep_alive",
+  "listening_ports",
+  "document_root",
+  "void",
+  "num_threads",
+  "run_as_user",
+  "url_rewrite_patterns",
+  "hide_files_patterns",
+  "request_timeout_ms",
   NULL
 };
 
@@ -27,8 +27,8 @@ const char *config_options[] = {
 int get_option_index(const char *name) {
   int i;
 
-  for (i = 0; config_options[i * 2] != NULL; i++) {
-    if (strcmp(config_options[i * 2], name) == 0) {
+  for (i = 0; config_options[i] != NULL; i++) {
+    if (strcmp(config_options[i], name) == 0) {
       return i;
     }
   }

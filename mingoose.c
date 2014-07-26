@@ -1944,9 +1944,9 @@ void show_usage_and_exit(void) {
     fprintf(stderr, "  mingoose [-option value ...]\n");
     fprintf(stderr, "\nOPTIONS:\n");
 
-    for (i = 0; config_options[i] != NULL; i += 2) {
-        fprintf(stderr, "  -%s %s\n",
-                config_options[i], config_options[i + 1] == NULL ? "<empty>" : config_options[i + 1]);
+    for (i = 0; config_options[i] != NULL; i++) {
+        fprintf(stderr, "  -%s\n",
+                config_options[i]);
     }
     exit(EXIT_FAILURE);
 }
@@ -1976,7 +1976,7 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     ctx->config[17] = mg_strdup("30000");
 
     /* dump ctx->config
-    for (i=0;config_options[i*2] != NULL; i++) {
+    for (i=0;config_options[i] != NULL; i++) {
         fprintf(stderr, "ctx->config[%d]=%s\n", i, ctx->config[i]);
     }
     exit(1);
