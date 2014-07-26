@@ -1965,17 +1965,22 @@ static int event_handler(struct mg_event *event) {
  */
 void set_options(struct mg_context * ctx, char *argv[]) {
     int i;
-    const char *name, *value, *default_value;
+    const char *name, *value;
 
+    ctx->config[2]  = mg_strdup("mydomain.com");
+    ctx->config[5]  = mg_strdup("yes");
+    ctx->config[8]  = mg_strdup("index.html,index.htm,index.shtml,index.php,index.lp");
+    ctx->config[9]  = mg_strdup("no");
+    ctx->config[10] = mg_strdup("8080");
+    ctx->config[13] = mg_strdup("50");
+    ctx->config[17] = mg_strdup("30000");
 
-    // Set default value if needed
-    for (i = 0; config_options[i * 2] != NULL; i++) {
-        default_value = config_options[i * 2 + 1];
-        assert(ctx->config[i] == NULL);
-        if (default_value != NULL) {
-            ctx->config[i] = mg_strdup(default_value);
-        }
+    /* dump ctx->config
+    for (i=0;config_options[i*2] != NULL; i++) {
+        fprintf(stderr, "ctx->config[%d]=%s\n", i, ctx->config[i]);
     }
+    exit(1);
+    */
 
     char *options[MAX_OPTIONS];
     const char **localoptions;
