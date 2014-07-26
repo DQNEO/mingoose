@@ -457,6 +457,12 @@ struct de {
     struct file file;
 };
 
+struct mime_type {
+    const char *extension;
+    size_t ext_len;
+    const char *mime_type;
+};
+
 char *skip_quoted(char **buf, const char *delimiters,
                   const char *whitespace, char quotechar);
 
