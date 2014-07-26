@@ -1449,10 +1449,7 @@ static void dispatch(struct mg_connection *conn) {
 }
 
 static void close_all_listening_sockets(struct mg_context *ctx) {
-    int i;
-    for (i = 0; i < ctx->num_listening_sockets; i++) {
-        closesocket(ctx->listening_sockets[i].sock);
-    }
+    closesocket(ctx->listening_sockets[0].sock);
     free(ctx->listening_sockets);
 }
 
@@ -1521,7 +1518,6 @@ static int set_port(struct mg_context *ctx) {
     }
 
     if ((ptr = (struct socket *) realloc(ctx->listening_sockets,
-                                         (ctx->num_listening_sockets + 1) *
                                          sizeof(ctx->listening_sockets[0]))) == NULL) {
         closesocket(so.sock);
 
@@ -1531,9 +1527,7 @@ static int set_port(struct mg_context *ctx) {
 
     set_close_on_exec(so.sock);
     ctx->listening_sockets = ptr;
-    ctx->listening_sockets[ctx->num_listening_sockets] = so;
-    ctx->num_listening_sockets++;
-
+    ctx->listening_sockets[0] = so;
     return 1;
 }
 
@@ -1809,23 +1803,19 @@ static void *master_thread(void *thread_func_param) {
 
     call_user(MG_THREAD_BEGIN, create_fake_connection(ctx), NULL);
 
-    pfd = (struct pollfd *) calloc(ctx->num_listening_sockets, sizeof(pfd[0]));
+    pfd = (struct pollfd *) calloc(1, sizeof(pfd[0]));
     while (pfd != NULL && ctx->stop_flag == 0) {
-        for (i = 0; i < ctx->num_listening_sockets; i++) {
-            pfd[i].fd = ctx->listening_sockets[i].sock;
-            pfd[i].events = POLLIN;
-        }
+            pfd[0].fd = ctx->listening_sockets[0].sock;
+            pfd[0].events = POLLIN;
 
-        if (poll(pfd, ctx->num_listening_sockets, 200) > 0) {
-            for (i = 0; i < ctx->num_listening_sockets; i++) {
+        if (poll(pfd, 1, 200) > 0) {
                 // NOTE(lsm): on QNX, poll() returns POLLRDNORM after the
                 // successfull poll, and POLLIN is defined as (POLLRDNORM | POLLRDBAND)
                 // Therefore, we're checking pfd[i].revents & POLLIN, not
                 // pfd[i].revents == POLLIN.
-                if (ctx->stop_flag == 0 && (pfd[i].revents & POLLIN)) {
-                    accept_new_connection(&ctx->listening_sockets[i], ctx);
+                if (ctx->stop_flag == 0 && (pfd[0].revents & POLLIN)) {
+                    accept_new_connection(&ctx->listening_sockets[0], ctx);
                 }
-            }
         }
     }
     free(pfd);
