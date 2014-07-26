@@ -175,7 +175,7 @@ static int authorize(struct mg_connection *conn, FILE *fp) {
     }
 
     if (!strcmp(ah.user, f_user) &&
-        !strcmp(conn->ctx->config[AUTHENTICATION_DOMAIN], f_domain))
+        !strcmp(conn->ctx->config[op("authentication_domain")], f_domain))
       return check_password(conn->request_info.request_method, ha1, ah.uri,
                             ah.nonce, ah.nc, ah.cnonce, ah.qop, ah.response);
   }
@@ -191,7 +191,7 @@ int check_authorization(struct mg_connection *conn, const char *path) {
   FILE *fp = NULL;
   int authorized = 1;
 
-  list = conn->ctx->config[PROTECT_URI];
+  list = conn->ctx->config[op("protect_uri")];
   while ((list = next_vector_eq(list, &uri_vec, &filename_vec)) != NULL) {
     if (!memcmp(conn->request_info.uri, uri_vec.ptr, uri_vec.len)) {
       mg_snprintf(fname, sizeof(fname), "%.*s",
@@ -220,12 +220,12 @@ void send_authorization_request(struct mg_connection *conn) {
             "Content-Length: 0\r\n"
             "WWW-Authenticate: Digest qop=\"auth\", "
             "realm=\"%s\", nonce=\"%lu\"\r\n\r\n",
-            conn->ctx->config[AUTHENTICATION_DOMAIN],
+            conn->ctx->config[op("authentication_domain")],
             (unsigned long) time(NULL));
 }
 
 int is_authorized_for_put(struct mg_connection *conn) {
-  const char *passfile = conn->ctx->config[PUT_DELETE_PASSWORDS_FILE];
+    const char *passfile = conn->ctx->config[op("put_delete_auth_file")];
   FILE *fp;
   int ret = 0;
 
