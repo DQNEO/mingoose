@@ -51,16 +51,6 @@ static int is_path_absolute(const char *path) {
 }
 
 
-char *get_option(char **options, const char *option_name) {
-  int i;
-
-  for (i = 0; options[i] != NULL; i++)
-    if (!strcmp(options[i], option_name))
-      return options[i + 1];
-
-  return NULL;
-}
-
 void verify_document_root(char *path) {
   struct stat st;
 
