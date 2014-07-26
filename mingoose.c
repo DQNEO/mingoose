@@ -1715,7 +1715,7 @@ static void accept_new_connection(const struct socket *listener,
     }
 }
 
-static void *master_thread(void *thread_func_param) {
+static void *callback_master_thread(void *thread_func_param) {
     struct mg_context *ctx = (struct mg_context *) thread_func_param;
     struct pollfd *pfd;
 
@@ -1900,7 +1900,7 @@ int main(int argc, char *argv[]) {
     (void) pthread_cond_init(&ctx->sq_full, NULL);
 
     // Start master (listening) thread
-    mg_start_thread(master_thread, ctx);
+    mg_start_thread(callback_master_thread, ctx);
 
     // Start worker threads
     for (i = 0; i < ctx->settings.num_threads; i++) {
