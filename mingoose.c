@@ -1972,7 +1972,7 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     ctx->config[8]  = mg_strdup("index.html,index.htm,index.shtml,index.php,index.lp");
     ctx->config[9]  = mg_strdup("no");
     ctx->config[10] = mg_strdup("8080");
-    ctx->config[13] = mg_strdup("50");
+    ctx->config[13] = mg_strdup("5");
     ctx->config[17] = mg_strdup("30000");
 
     /* dump ctx->config
