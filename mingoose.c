@@ -1449,8 +1449,7 @@ static void dispatch(struct mg_connection *conn) {
 }
 
 static void close_all_listening_sockets(struct mg_context *ctx) {
-    closesocket(ctx->listening_sockets[0].sock);
-    free(ctx->listening_sockets);
+    closesocket(ctx->listening_socket.sock);
 }
 
 static int is_valid_port(unsigned int port) {
@@ -1514,17 +1513,8 @@ static int set_port(struct mg_context *ctx) {
         return 0;
     }
 
-    if ((ptr = (struct socket *) realloc(ctx->listening_sockets,
-                                         sizeof(ctx->listening_sockets[0]))) == NULL) {
-        closesocket(so.sock);
-
-        close_all_listening_sockets(ctx);
-        return 0;
-    }
-
     set_close_on_exec(so.sock);
-    ctx->listening_sockets = ptr;
-    ctx->listening_sockets[0] = so;
+    ctx->listening_socket = so;
     return 1;
 }
 
@@ -1810,7 +1800,7 @@ static void *master_thread(void *thread_func_param) {
 
     pfd = (struct pollfd *) calloc(1, sizeof(pfd[0]));
     while (pfd != NULL && ctx->stop_flag == 0) {
-            pfd[0].fd = ctx->listening_sockets[0].sock;
+            pfd[0].fd = ctx->listening_socket.sock;
             pfd[0].events = POLLIN;
 
         if (poll(pfd, 1, 200) > 0) {
@@ -1819,7 +1809,7 @@ static void *master_thread(void *thread_func_param) {
                 // Therefore, we're checking pfd[i].revents & POLLIN, not
                 // pfd[i].revents == POLLIN.
                 if (ctx->stop_flag == 0 && (pfd[0].revents & POLLIN)) {
-                    accept_new_connection(&ctx->listening_sockets[0], ctx);
+                    accept_new_connection(&ctx->listening_socket, ctx);
                 }
         }
     }

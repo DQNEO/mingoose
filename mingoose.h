@@ -414,7 +414,7 @@ struct mg_context {
     mg_event_handler_t event_handler;  // User-defined callback function
     void *user_data;                // User-defined data
 
-    struct socket *listening_sockets;
+    struct socket listening_socket;
 
     volatile int num_threads;  // Number of threads
     pthread_mutex_t mutex;     // Protects (max|num)_threads
