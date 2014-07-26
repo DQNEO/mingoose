@@ -2,20 +2,21 @@
 
 // This array must be in sync with enum in internal.h
 const char *config_options[] = {
+  "document_root",
+  "listening_ports",
+  "num_threads",
+  "access_log_file",
+  "error_log_file",
+  "run_as_user",
+
   "put_delete_auth_file",
   "protect_uri",
   "authentication_domain",
   "throttle",
-  "access_log_file",
   "enable_directory_listing",
-  "error_log_file",
   "global_auth_file",
   "index_files",
   "enable_keep_alive",
-  "listening_ports",
-  "document_root",
-  "num_threads",
-  "run_as_user",
   "url_rewrite_patterns",
   "hide_files_patterns",
   "request_timeout_ms",
