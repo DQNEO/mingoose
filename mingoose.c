@@ -1983,6 +1983,8 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     */
 
     char *options[MAX_OPTIONS];
+    const char **localoptions;
+    localoptions = (const char **)options;
 
     options[0] = NULL;
     // set default document_root
@@ -1996,9 +1998,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
         }
         set_option(options, &argv[i][1], argv[i + 1]);
     }
-
-    const char **localoptions;
-    localoptions = (const char **)options;
 
     while (localoptions && (name = *localoptions++) != NULL) {
         if ((i = get_option_index(name)) == -1) {
