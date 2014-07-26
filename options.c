@@ -134,7 +134,7 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     /* dump ctx->config
     */
     for (i=0;config_options[i] != NULL; i++) {
-        fprintf(stderr, "%s, ctx->config[%d]=%s\n", config_options[i], i, ctx->config[i]);
+        //fprintf(stderr, "%s, ctx->config[%d]=%s\n", config_options[i], i, ctx->config[i]);
     }
 
     ctx->settings.put_delete_auth_file = ctx->config[op("put_delete_auth_file")];
