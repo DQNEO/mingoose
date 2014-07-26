@@ -1987,7 +1987,7 @@ void set_options(struct mg_context * ctx, char *argv[]) {
         name =  &argv[i][1];
         value = argv[i + 1];
 
-        if (get_option_index(name) == -1) {
+        if (op(name) == -1) {
             cry(create_fake_connection(ctx), "Invalid option: %s", name);
             free_context(ctx);
             die("%s", "Failed to start Mongoose.");
