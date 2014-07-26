@@ -1534,7 +1534,6 @@ static int set_port(struct mg_context *ctx) {
 static int mg_setuid(struct mg_context *ctx) {
     struct passwd *pw;
     const char *uid = ctx->config[op("run_as_user")];
-    int success = 0;
 
     if (uid == NULL) {
         return 1;
@@ -1557,7 +1556,7 @@ static int mg_setuid(struct mg_context *ctx) {
         return 0;
     }
 
-    return success;
+    return 1;
 }
 
 
