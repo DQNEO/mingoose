@@ -1975,13 +1975,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     ctx->config[13] = mg_strdup("5");
     ctx->config[17] = mg_strdup("30000");
 
-    /* dump ctx->config
-    for (i=0;config_options[i] != NULL; i++) {
-        fprintf(stderr, "ctx->config[%d]=%s\n", i, ctx->config[i]);
-    }
-    exit(1);
-    */
-
     char *options[MAX_OPTIONS];
     const char **localoptions;
     localoptions = (const char **)options;
@@ -2019,6 +2012,14 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     for (i = 0; options[i] != NULL; i++) {
         free(options[i]);
     }
+
+    /* dump ctx->config
+    for (i=0;config_options[i] != NULL; i++) {
+        fprintf(stderr, "ctx->config[%d]=%s\n", i, ctx->config[i]);
+    }
+    exit(1);
+    */
+
 
     ctx->settings.put_delete_auth_file = ctx->config[PUT_DELETE_PASSWORDS_FILE];
     ctx->settings.access_log_file =  ctx->config[ACCESS_LOG_FILE];
