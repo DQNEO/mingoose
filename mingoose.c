@@ -1612,7 +1612,7 @@ static int consume_socket(struct mg_context *ctx, struct socket *sp) {
     return !ctx->stop_flag;
 }
 
-static void *worker_thread(void *thread_func_param) {
+static void *callback_worker_thread(void *thread_func_param) {
     struct mg_context *ctx = (struct mg_context *) thread_func_param;
     struct mg_connection *conn;
 
@@ -1904,7 +1904,7 @@ int main(int argc, char *argv[]) {
 
     // Start worker threads
     for (i = 0; i < ctx->settings.num_threads; i++) {
-        if (mg_start_thread(worker_thread, ctx) != 0) {
+        if (mg_start_thread(callback_worker_thread, ctx) != 0) {
             cry(create_fake_connection(ctx), "Cannot start worker thread: %ld", (long) ERRNO);
         } else {
             ctx->num_threads++;
