@@ -1799,7 +1799,6 @@ static void accept_new_connection(const struct socket *listener,
 static void *master_thread(void *thread_func_param) {
     struct mg_context *ctx = (struct mg_context *) thread_func_param;
     struct pollfd *pfd;
-    int i;
 
 #if defined(ISSUE_317)
     struct sched_param sched_param;
