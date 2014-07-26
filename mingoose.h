@@ -378,8 +378,6 @@ struct socket {
     SOCKET sock;          // Listening socket
     union usa lsa;        // Local socket address
     union usa rsa;        // Remote socket address
-    unsigned is_ssl:1;    // Is port SSL-ed
-    unsigned ssl_redir:1; // Is port supposed to redirect everything to SSL port
 };
 
 

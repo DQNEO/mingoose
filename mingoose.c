@@ -1487,13 +1487,9 @@ static int parse_port_string(const char *ptr, struct socket *so) {
     ch = ptr[len];  // Next character after the port number
 
     DEBUG_TRACE(("ch=%c", ch));
-    
-    so->is_ssl = ch == 's';
-    so->ssl_redir = ch == 'r';
 
-    // Make sure the port is valid and string ends with 's', 'r' or ','
-    return is_valid_port(port) &&
-        (ch == '\0' || ch == 's' || ch == 'r' || ch == ',');
+    // Make sure the port is valid and string ends with '\0'
+    return is_valid_port(port) && (ch == '\0');
 }
 
 static int set_port(struct mg_context *ctx) {
@@ -1502,7 +1498,7 @@ static int set_port(struct mg_context *ctx) {
 
     if (!parse_port_string(ctx->settings.ports, &so)) {
         cry(create_fake_connection(ctx), "%s: %s: invalid port spec. Expecting : %s",
-            __func__, ctx->settings.ports, "[IP_ADDRESS:]PORT[s|r]");
+            __func__, ctx->settings.ports, "[IP_ADDRESS:]PORT");
         close_all_listening_sockets(ctx);
         return 0;
     }
@@ -1725,7 +1721,7 @@ static void *worker_thread(void *thread_func_param) {
             memcpy(&conn->request_info.remote_ip,
                    &conn->client.rsa.sin.sin_addr.s_addr, 4);
             conn->request_info.remote_ip = ntohl(conn->request_info.remote_ip);
-            conn->request_info.is_ssl = conn->client.is_ssl;
+            conn->request_info.is_ssl = 0;
 
             process_new_connection(conn);
 
@@ -1787,8 +1783,6 @@ static void accept_new_connection(const struct socket *listener,
         // Put so socket structure into the queue
         DEBUG_TRACE(("Accepted socket %d", (int) so.sock));
         set_close_on_exec(so.sock);
-        so.is_ssl = listener->is_ssl;
-        so.ssl_redir = listener->ssl_redir;
         getsockname(so.sock, &so.lsa.sa, &len);
         // Set TCP keep-alive. This is needed because if HTTP-level keep-alive
         // is enabled, and client resets the connection, server won't get
