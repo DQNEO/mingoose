@@ -1983,10 +1983,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     */
 
     char *options[MAX_OPTIONS];
-    const char **localoptions;
-    localoptions = (const char **)options;
-
-
     // Update config based on command line arguments
 
     //initialize
@@ -2014,6 +2010,8 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     // Make extra verification for certain options
     verify_document_root(get_option(options, "document_root"));
 
+    const char **localoptions;
+    localoptions = (const char **)options;
 
     while (localoptions && (name = *localoptions++) != NULL) {
         if ((i = get_option_index(name)) == -1) {
