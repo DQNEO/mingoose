@@ -398,11 +398,14 @@ static void remove_double_dots_and_double_slashes(char *s) {
     *p = '\0';
 }
 
-static const struct {
+struct mime_type {
     const char *extension;
     size_t ext_len;
     const char *mime_type;
-} builtin_mime_types[] = {
+};
+
+
+const struct mime_type builtin_mime_types[] = {
     {".html", 5, "text/html"},
     {".htm", 4, "text/html"},
     {".shtm", 5, "text/html"},
