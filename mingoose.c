@@ -1463,7 +1463,7 @@ static int is_valid_port(unsigned int port) {
 // Valid listening port specification is: [ip_address:]port[s]
 // Examples: 80, 443s, 127.0.0.1:3128, 1.2.3.4:8080s
 // TODO(lsm): add parsing of the IPv6 address
-static int parse_port_string(const struct vec *vec, struct socket *so) {
+static int parse_port_string(const char *ptr, struct socket *so) {
     unsigned int a, b, c, d, ch, port;
     int len;
 
@@ -1473,34 +1473,34 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
     memset(so, 0, sizeof(*so));
     so->lsa.sin.sin_family = AF_INET;
 
-    if (sscanf(vec->ptr, "%u.%u.%u.%u:%u%n", &a, &b, &c, &d, &port, &len) == 5) {
+    if (sscanf(ptr, "%u.%u.%u.%u:%u%n", &a, &b, &c, &d, &port, &len) == 5) {
         // Bind to a specific IPv4 address, e.g. 192.168.1.5:8080
         so->lsa.sin.sin_addr.s_addr = htonl((a << 24) | (b << 16) | (c << 8) | d);
         so->lsa.sin.sin_port = htons((uint16_t) port);
-    } else if (sscanf(vec->ptr, "%u%n", &port, &len) == 1) {
+    } else if (sscanf(ptr, "%u%n", &port, &len) == 1) {
         // If only port is specified, bind to IPv4, INADDR_ANY
         so->lsa.sin.sin_port = htons((uint16_t) port);
     } else {
         port = len = 0;   // Parsing failure. Make port invalid.
     }
 
-    ch = vec->ptr[len];  // Next character after the port number
+    ch = ptr[len];  // Next character after the port number
+
+    DEBUG_TRACE(("ch=%c", ch));
+    
     so->is_ssl = ch == 's';
     so->ssl_redir = ch == 'r';
 
-    // Make sure the port is valid and vector ends with 's', 'r' or ','
+    // Make sure the port is valid and string ends with 's', 'r' or ','
     return is_valid_port(port) &&
         (ch == '\0' || ch == 's' || ch == 'r' || ch == ',');
 }
 
 static int set_port(struct mg_context *ctx) {
     int on = 1;
-    struct vec vec;
     struct socket so, *ptr;
 
-    next_vector(ctx->settings.ports, &vec);
-  
-    if (!parse_port_string(&vec, &so)) {
+    if (!parse_port_string(ctx->settings.ports, &so)) {
         cry(create_fake_connection(ctx), "%s: %s: invalid port spec. Expecting : %s",
             __func__, ctx->settings.ports, "[IP_ADDRESS:]PORT[s|r]");
         close_all_listening_sockets(ctx);
