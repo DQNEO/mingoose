@@ -1911,10 +1911,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    if (ctx == NULL) {
-        die("%s", "Failed to start Mongoose.");
-    }
-
     printf("Mingoose v.%s started on port(s) %s with web root [%s]\n"
            ,mg_version()
            ,ctx->settings.ports
