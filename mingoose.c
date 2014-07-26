@@ -1983,9 +1983,7 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     */
 
     char *options[MAX_OPTIONS];
-    // Update config based on command line arguments
 
-    //initialize
     options[0] = NULL;
     // set default document_root
     set_option(options, "document_root", ".");
