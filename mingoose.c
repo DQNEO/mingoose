@@ -1501,8 +1501,8 @@ static int set_port(struct mg_context *ctx) {
     next_vector(ctx->settings.ports, &vec);
   
     if (!parse_port_string(&vec, &so)) {
-        cry(create_fake_connection(ctx), "%s: %.*s: invalid port spec. Expecting list of: %s",
-            __func__, (int) vec.len, vec.ptr, "[IP_ADDRESS:]PORT[s|r]");
+        cry(create_fake_connection(ctx), "%s: %s: invalid port spec. Expecting : %s",
+            __func__, ctx->settings.ports, "[IP_ADDRESS:]PORT[s|r]");
         close_all_listening_sockets(ctx);
         return 0;
     }
