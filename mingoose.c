@@ -1764,9 +1764,6 @@ static void *callback_master_thread(void *thread_func_param) {
     (void) pthread_cond_destroy(&ctx->sq_empty);
     (void) pthread_cond_destroy(&ctx->sq_full);
 
-#if !defined(NO_SSL)
-    uninitialize_ssl(ctx);
-#endif
     DEBUG_TRACE(("exiting"));
 
     call_user(MG_THREAD_END, create_fake_connection(ctx), NULL);
