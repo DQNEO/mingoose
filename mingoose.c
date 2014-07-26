@@ -2001,7 +2001,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
 
     // Make sure we have absolute paths for files and directories
     // https://github.com/valenok/mongoose/issues/181
-    set_absolute_path(options, "document_root", argv[0]);
     set_absolute_path(options, "put_delete_auth_file", argv[0]);
     set_absolute_path(options, "access_log_file", argv[0]);
     set_absolute_path(options, "error_log_file", argv[0]);
@@ -2031,11 +2030,12 @@ void set_options(struct mg_context * ctx, char *argv[]) {
         free(options[i]);
     }
 
-
     ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
     ctx->settings.ports  = ctx->config[LISTENING_PORTS];
     ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
     ctx->settings.global_passwords_file = ctx->config[GLOBAL_PASSWORDS_FILE];
+
+    ctx->settings.document_root = get_absolute_path(ctx->settings.document_root, argv[0]);
 
     // Make extra verification for certain options
     verify_document_root(ctx->settings.document_root);

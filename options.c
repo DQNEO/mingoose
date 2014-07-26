@@ -126,3 +126,39 @@ void set_absolute_path(char *options[], const char *option_name,
   set_option(options, option_name, abs);
 }
 
+char * get_absolute_path(char *relpath,
+                              const char *path_to_mongoose_exe) {
+    char path[PATH_MAX], abs[PATH_MAX];
+  const char *p;
+
+  // Check whether option is already set
+
+  if (relpath == NULL) {
+      return NULL;
+  }
+
+  // If option is already set and it is an absolute path,
+  // leave it as it is.
+  if (is_path_absolute(relpath)) {
+      return relpath;
+  }
+
+  // Not absolute. Use the directory where mongoose executable lives
+  // be the relative directory for everything.
+  // Extract mongoose executable directory into path.
+  if ((p = strrchr(path_to_mongoose_exe, DIRSEP)) == NULL) {
+      getcwd(path, sizeof(path));
+  } else {
+      snprintf(path, sizeof(path), "%.*s", (int) (p - path_to_mongoose_exe),
+               path_to_mongoose_exe);
+  }
+
+  strncat(path, "/", sizeof(path) - 1);
+  strncat(path, relpath, sizeof(path) - 1);
+
+  // Absolutize the path, and set the option
+  abs_path(path, abs, sizeof(abs));
+
+  return sdup(abs);
+}
+
