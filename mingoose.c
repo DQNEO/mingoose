@@ -1515,9 +1515,9 @@ static int set_port(struct mg_context *ctx) {
                    (void *) &on, sizeof(on)) != 0 ||
         bind(so.sock, &so.lsa.sa, so.lsa.sa.sa_family == AF_INET ?
              sizeof(so.lsa.sin) : sizeof(so.lsa)) != 0 ||
-        listen(so.sock, SOMAXCONN) != 0) {
-        cry(create_fake_connection(ctx), "%s: cannot bind to %.*s: %d (%s)", __func__,
-            (int) vec.len, vec.ptr, ERRNO, strerror(errno));
+        listen(so.sock, SOMAXCONN) != 0 ) {
+        cry(create_fake_connection(ctx), "%s: cannot bind to %s: %d (%s)", __func__,
+            ctx->settings.ports, ERRNO, strerror(errno));
         closesocket(so.sock);
 
         close_all_listening_sockets(ctx);
