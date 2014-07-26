@@ -14,7 +14,6 @@ const char *config_options[] = {
   "enable_keep_alive",
   "listening_ports",
   "document_root",
-  "void",
   "num_threads",
   "run_as_user",
   "url_rewrite_patterns",
