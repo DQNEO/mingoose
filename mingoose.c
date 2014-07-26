@@ -2016,11 +2016,12 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     }
 
     /* dump ctx->config
-    for (i=0;config_options[i] != NULL; i++) {
-        fprintf(stderr, "ctx->config[%d]=%s\n", i, ctx->config[i]);
-    }
-    exit(1);
     */
+    for (i=0;config_options[i] != NULL; i++) {
+        fprintf(stderr, "%s, ctx->config[%d]=%s\n", config_options[i], i, ctx->config[i]);
+    }
+    //exit(1);
+ 
 
 
     ctx->settings.put_delete_auth_file = ctx->config[PUT_DELETE_PASSWORDS_FILE];
