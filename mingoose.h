@@ -385,9 +385,9 @@ struct socket {
 
 // NOTE(lsm): this enum shoulds be in sync with the config_options.
 enum {
-    PUT_DELETE_PASSWORDS_FILE,
-    PROTECT_URI,
-    AUTHENTICATION_DOMAIN,
+    VOID1,
+    VOID2,
+    VOID3,
     THROTTLE,
     ACCESS_LOG_FILE,
     ENABLE_DIRECTORY_LISTING,

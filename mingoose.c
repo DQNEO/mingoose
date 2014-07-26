@@ -108,7 +108,7 @@ static int should_keep_alive(const struct mg_connection *conn) {
     const char *header = mg_get_header(conn, "Connection");
     if (conn->must_close ||
         conn->status_code == 401 ||
-        mg_strcasecmp(conn->ctx->config[ENABLE_KEEP_ALIVE], "yes") != 0 ||
+        mg_strcasecmp(conn->ctx->config[op("enable_keep_alive")], "yes") != 0 ||
         (header != NULL && mg_strcasecmp(header, "keep-alive") != 0) ||
         (header == NULL && http_version && strcmp(http_version, "1.1"))) {
         return 0;
@@ -342,7 +342,7 @@ static int convert_uri_to_file_name(struct mg_connection *conn, char *buf,
     // If document_root is NULL, leave the file empty.
     mg_snprintf(buf, buf_len - 1, "%s%s", root, uri);
 
-    rewrite = conn->ctx->config[REWRITE];
+    rewrite = conn->ctx->config[op("url_rewrite_patterns")];
     while ((rewrite = next_vector_eq(rewrite, &a, &b)) != NULL) {
         if ((match_len = match_prefix(a.ptr, a.len, uri)) > 0) {
             mg_snprintf(buf, buf_len - 1, "%.*s%s", (int) b.len, b.ptr,
@@ -562,7 +562,7 @@ static int compare_dir_entries(const void *p1, const void *p2) {
 
 static int must_hide_file(struct mg_connection *conn, const char *path) {
     const char *pw_pattern = "**" PASSWORDS_FILE_NAME "$";
-    const char *pattern = conn->ctx->config[HIDE_FILES];
+    const char *pattern = conn->ctx->config[op("hide_files_patterns")];
     return match_prefix(pw_pattern, strlen(pw_pattern), path) > 0 ||
         (pattern != NULL && match_prefix(pattern, strlen(pattern), path) > 0);
 }
@@ -876,7 +876,7 @@ static void handle_file_request(struct mg_connection *conn, const char *path,
 // If the file is found, it's stats is returned in stp.
 static int substitute_index_file(struct mg_connection *conn, char *path,
                                  size_t path_len, struct file *filep) {
-    const char *list = conn->ctx->config[INDEX_FILES];
+    const char *list = conn->ctx->config[op("index_files")];
     struct file file = STRUCT_FILE_INITIALIZER;
     struct vec filename_vec;
     size_t n = strlen(path);
@@ -1159,7 +1159,7 @@ static void handle_propfind(struct mg_connection *conn, const char *path,
 
     // If it is a directory, print directory entries too if Depth is not 0
     if (filep->is_directory &&
-        !mg_strcasecmp(conn->ctx->config[ENABLE_DIRECTORY_LISTING], "yes") &&
+        !mg_strcasecmp(conn->ctx->config[op("enable_directory_listing")], "yes") &&
         (depth == NULL || strcmp(depth, "0") != 0)) {
         scan_directory(conn, path, conn, &print_dav_dir_entry);
     }
@@ -1400,7 +1400,7 @@ static void dispatch(struct mg_connection *conn) {
     uri_len = (int) strlen(ri->uri);
     mg_url_decode(ri->uri, uri_len, (char *) ri->uri, uri_len + 1, 0);
     remove_double_dots_and_double_slashes((char *) ri->uri);
-    conn->throttle = set_throttle(conn->ctx->config[THROTTLE],
+    conn->throttle = set_throttle(conn->ctx->config[op("throttle")],
                                   get_remote_ip(conn), ri->uri);
     path[0] = '\0';
     convert_uri_to_file_name(conn, path, sizeof(path), &file);
@@ -1435,7 +1435,7 @@ static void dispatch(struct mg_connection *conn) {
         handle_propfind(conn, path, &file);
     } else if (file.is_directory &&
                !substitute_index_file(conn, path, sizeof(path), &file)) {
-        if (!mg_strcasecmp(conn->ctx->config[ENABLE_DIRECTORY_LISTING], "yes")) {
+        if (!mg_strcasecmp(conn->ctx->config[op("enable_directory_listing")], "yes")) {
             handle_directory_request(conn, path);
         } else {
             send_http_error(conn, 403, "Directory Listing Denied",
@@ -1555,7 +1555,7 @@ static int set_ports_option(struct mg_context *ctx) {
 
 static int set_uid_option(struct mg_context *ctx) {
     struct passwd *pw;
-    const char *uid = ctx->config[RUN_AS_USER];
+    const char *uid = ctx->config[op("run_as_user")];
     int success = 0;
 
     if (uid == NULL) {
@@ -1629,7 +1629,7 @@ static void process_new_connection(struct mg_connection *conn) {
     int keep_alive_enabled, keep_alive, discard_len;
     char ebuf[100];
 
-    keep_alive_enabled = !strcmp(conn->ctx->config[ENABLE_KEEP_ALIVE], "yes");
+    keep_alive_enabled = !strcmp(conn->ctx->config[op("enable_keep_alive")], "yes");
     keep_alive = 0;
 
     // Important: on new connection, reset the receiving buffer. Credit goes
@@ -1809,7 +1809,7 @@ static void accept_new_connection(const struct socket *listener,
         // is down and will close the server end.
         // Thanks to Igor Klopov who suggested the patch.
         setsockopt(so.sock, SOL_SOCKET, SO_KEEPALIVE, (void *) &on, sizeof(on));
-        set_sock_timeout(so.sock, atoi(ctx->config[REQUEST_TIMEOUT]));
+        set_sock_timeout(so.sock, atoi(ctx->config[op("request_timeout_ms")]));
         produce_socket(ctx, &so);
     }
 }
