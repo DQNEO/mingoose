@@ -1505,12 +1505,11 @@ static int parse_port_string(const struct vec *vec, struct socket *so) {
 }
 
 static int set_ports_option(struct mg_context *ctx) {
-    const char *list = ctx->settings.ports;
     int on = 1;
     struct vec vec;
     struct socket so, *ptr;
 
-    next_vector(list, &vec);
+    next_vector(ctx->settings.ports, &vec);
   
     if (!parse_port_string(&vec, &so)) {
         cry(create_fake_connection(ctx), "%s: %.*s: invalid port spec. Expecting list of: %s",
