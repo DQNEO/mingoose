@@ -1999,13 +1999,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
         set_option(options, &argv[i][1], argv[i + 1]);
     }
 
-    // Make sure we have absolute paths for files and directories
-    // https://github.com/valenok/mongoose/issues/181
-    set_absolute_path(options, "put_delete_auth_file", argv[0]);
-    set_absolute_path(options, "access_log_file", argv[0]);
-    set_absolute_path(options, "error_log_file", argv[0]);
-    set_absolute_path(options, "global_auth_file", argv[0]);
-
     const char **localoptions;
     localoptions = (const char **)options;
 

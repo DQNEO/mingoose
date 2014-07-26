@@ -520,8 +520,6 @@ void sockaddr_to_string(char *buf, size_t len,
 
 void log_access(const struct mg_connection *conn) ;
 
-void set_absolute_path(char *options[], const char *option_name,
-                       const char *path_to_mongoose_exe);
 char * get_absolute_path(char *relpath,
                          const char *path_to_mongoose_exe) ;
 
