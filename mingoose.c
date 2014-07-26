@@ -1971,7 +1971,8 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     // Set default value if needed
     for (i = 0; config_options[i * 2] != NULL; i++) {
         default_value = config_options[i * 2 + 1];
-        if (ctx->config[i] == NULL && default_value != NULL) {
+        assert(ctx->config[i] == NULL);
+        if (default_value != NULL) {
             ctx->config[i] = mg_strdup(default_value);
         }
     }
