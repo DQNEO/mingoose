@@ -1533,26 +1533,26 @@ static int set_port(struct mg_context *ctx) {
  */
 static int mg_setuid(struct mg_context *ctx) {
     struct passwd *pw;
-    const char *uid = ctx->config[op("run_as_user")];
+    const char *username = ctx->config[op("run_as_user")];
 
-    if (uid == NULL) {
+    if (username == NULL) {
         return 1;
     }
 
-    pw = getpwnam(uid);
+    pw = getpwnam(username);
 
     if (pw == NULL) {
-        cry(create_fake_connection(ctx), "%s: unknown user [%s]", __func__, uid);
+        cry(create_fake_connection(ctx), "%s: unknown user [%s]", __func__, username);
         return 0;
     }
 
     if (setgid(pw->pw_gid) == -1) {
-        cry(create_fake_connection(ctx), "%s: setgid(%s): %s", __func__, uid, strerror(errno));
+        cry(create_fake_connection(ctx), "%s: setgid(%s): %s", __func__, username, strerror(errno));
         return 0;
     }
 
     if (setuid(pw->pw_uid) == -1) {
-        cry(create_fake_connection(ctx), "%s: setuid(%s): %s", __func__, uid, strerror(errno));
+        cry(create_fake_connection(ctx), "%s: setuid(%s): %s", __func__, username, strerror(errno));
         return 0;
     }
 
