@@ -2017,8 +2017,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     ctx->settings.error_log_file = get_absolute_path(ctx->settings.error_log_file,argv[0]);
     ctx->settings.global_passwords_file = get_absolute_path(ctx->settings.global_passwords_file,argv[0]);
 
-    DEBUG_TRACE(("accsess_log_file=[%s]", ctx->settings.access_log_file));
-
     // Make extra verification for certain options
     verify_document_root(ctx->settings.document_root);
 
