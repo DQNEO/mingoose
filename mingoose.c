@@ -2024,13 +2024,13 @@ void set_options(struct mg_context * ctx, char *argv[]) {
  
 
 
-    ctx->settings.put_delete_auth_file = ctx->config[PUT_DELETE_PASSWORDS_FILE];
-    ctx->settings.access_log_file =  ctx->config[ACCESS_LOG_FILE];
-    ctx->settings.error_log_file = ctx->config[ERROR_LOG_FILE];
-    ctx->settings.document_root = ctx->config[DOCUMENT_ROOT];
-    ctx->settings.ports  = ctx->config[LISTENING_PORTS];
-    ctx->settings.num_threads  = atoi(ctx->config[NUM_THREADS]);
-    ctx->settings.global_passwords_file = ctx->config[GLOBAL_PASSWORDS_FILE];
+    ctx->settings.put_delete_auth_file = ctx->config[op("put_delete_auth_file")];
+    ctx->settings.access_log_file =  ctx->config[op("access_log_file")];
+    ctx->settings.error_log_file = ctx->config[op("error_log_file")];
+    ctx->settings.document_root = ctx->config[op("document_root")];
+    ctx->settings.ports  = ctx->config[op("listening_ports")];
+    ctx->settings.num_threads  = atoi(ctx->config[op("num_threads")]);
+    ctx->settings.global_passwords_file = ctx->config[op("global_auth_file")];
 
     ctx->settings.document_root = get_absolute_path(ctx->settings.document_root, argv[0]);
     ctx->settings.put_delete_auth_file = get_absolute_path(ctx->settings.put_delete_auth_file,argv[0]);
@@ -2042,11 +2042,6 @@ void set_options(struct mg_context * ctx, char *argv[]) {
 
     // Make extra verification for certain options
     verify_document_root(ctx->settings.document_root);
-
-    ctx->config[LISTENING_PORTS] = NULL;
-    ctx->config[DOCUMENT_ROOT] = NULL;
-    ctx->config[NUM_THREADS] = NULL;
-    ctx->config[GLOBAL_PASSWORDS_FILE] = NULL;
 
 }
 
