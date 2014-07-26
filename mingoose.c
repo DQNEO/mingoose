@@ -1690,13 +1690,13 @@ static int set_sock_timeout(SOCKET sock, int milliseconds) {
         setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, (void *) &t, sizeof(t));
 }
 
-static void accept_new_connection(const struct socket *listener,
+static void accept_new_connection(const SOCKET sock,
                                   struct mg_context *ctx) {
     struct socket so;
     socklen_t len = sizeof(so.rsa);
     int on = 1;
 
-    so.sock = accept(listener->sock, &so.rsa.sa, &len);
+    so.sock = accept(sock, &so.rsa.sa, &len);
     if (so.sock == INVALID_SOCKET) {
     } else if (0) {
     } else {
@@ -1739,7 +1739,7 @@ static void *callback_master_thread(void *thread_func_param) {
                 // Therefore, we're checking pfd[i].revents & POLLIN, not
                 // pfd[i].revents == POLLIN.
                 if (ctx->stop_flag == 0 && (pfd[0].revents & POLLIN)) {
-                    accept_new_connection(&ctx->listening_socket, ctx);
+                    accept_new_connection(ctx->listening_socket.sock, ctx);
                 }
         }
     }
