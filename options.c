@@ -23,7 +23,7 @@ const char *config_options[] = {
 };
 
 
-int get_option_index(const char *name) {
+int op(const char *name) {
   int i;
 
   for (i = 0; config_options[i] != NULL; i++) {
@@ -37,10 +37,6 @@ int get_option_index(const char *name) {
   return -1; // not found
 }
 
-int op(const char *key)
-{
-    return get_option_index(key);
-}
 
 static char *sdup(const char *str) {
   char *p;
