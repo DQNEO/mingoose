@@ -406,13 +406,23 @@ enum {
 };
 
 struct settings {
-    char *document_root;
-    char *ports;
-    int  num_threads;
-    char *global_passwords_file;
     char *put_delete_auth_file;
+    char *protect_uri;
+    char *authentication_domain;
+    char *throttle;
     char *access_log_file;
+    char *enable_directory_listing;
     char *error_log_file;
+    char *global_passwords_file;
+    char *index_files;
+    char *enable_keep_alive;
+    char *ports;
+    char *document_root;
+    int  num_threads;
+    char *run_as_user;
+    char *url_rewrite_patterns;
+    char *hide_files_patterns;
+    char *request_timeout_ms;
 };
 
 struct mg_context {
