@@ -415,7 +415,6 @@ struct mg_context {
     void *user_data;                // User-defined data
 
     struct socket *listening_sockets;
-    int num_listening_sockets;
 
     volatile int num_threads;  // Number of threads
     pthread_mutex_t mutex;     // Protects (max|num)_threads
