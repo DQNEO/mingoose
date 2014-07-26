@@ -383,27 +383,8 @@ struct socket {
 };
 
 
-// NOTE(lsm): this enum shoulds be in sync with the config_options.
-enum {
-    VOID1,
-    VOID2,
-    VOID3,
-    THROTTLE,
-    ACCESS_LOG_FILE,
-    ENABLE_DIRECTORY_LISTING,
-    ERROR_LOG_FILE,
-    GLOBAL_PASSWORDS_FILE,
-    INDEX_FILES,
-    ENABLE_KEEP_ALIVE,
-    LISTENING_PORTS,
-    DOCUMENT_ROOT,
-    NUM_THREADS,
-    RUN_AS_USER,
-    REWRITE,
-    HIDE_FILES,
-    REQUEST_TIMEOUT,
-    NUM_OPTIONS
-};
+// NOTE(lsm): this shoulds be in sync with the config_options.
+#define NUM_OPTIONS 17
 
 int op(const char *);
 
