@@ -520,7 +520,6 @@ void process_command_line_arguments(char *argv[], char **options) ;
 
 void verify_document_root(char *path) ;
 char *get_option(char **options, const char *option_name) ;
-void set_option(char **options, const char *name, const char *value);
 
 void die(const char *fmt, ...) ;
 

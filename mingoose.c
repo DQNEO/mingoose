@@ -1975,13 +1975,8 @@ void set_options(struct mg_context * ctx, char *argv[]) {
     ctx->config[op("num_threads")] = mg_strdup("5");
     ctx->config[op("request_timeout_ms")] = mg_strdup("30000");
 
-    char *options[MAX_OPTIONS];
-    const char **localoptions;
-    localoptions = (const char **)options;
-
-    options[0] = NULL;
     // set default document_root
-    set_option(options, "document_root", ".");
+    ctx->config[op("document_root")] = mg_strdup(".");
 
     // Handle command line flags.
     // They override config file and default settings.
@@ -1989,28 +1984,17 @@ void set_options(struct mg_context * ctx, char *argv[]) {
         if (argv[i][0] != '-' || argv[i + 1] == NULL) {
             show_usage_and_exit();
         }
-        set_option(options, &argv[i][1], argv[i + 1]);
-    }
+        name =  &argv[i][1];
+        value = argv[i + 1];
 
-    while (localoptions && (name = *localoptions++) != NULL) {
-        if ((i = get_option_index(name)) == -1) {
+        if (get_option_index(name) == -1) {
             cry(create_fake_connection(ctx), "Invalid option: %s", name);
             free_context(ctx);
             die("%s", "Failed to start Mongoose.");
         }
 
-        if ((value = *localoptions++) == NULL) {
-            cry(create_fake_connection(ctx), "%s: option value cannot be NULL", name);
-            free_context(ctx);
-            die("%s", "Failed to start Mongoose.");
-        }
-
-        ctx->config[i] = mg_strdup(value);
+        ctx->config[op(name)] = mg_strdup(value);
         DEBUG_TRACE(("[%s] -> [%s]", name, value));
-    }
-
-    for (i = 0; options[i] != NULL; i++) {
-        free(options[i]);
     }
 
     /* dump ctx->config

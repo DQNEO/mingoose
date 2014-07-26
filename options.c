@@ -55,28 +55,6 @@ static int is_path_absolute(const char *path) {
 }
 
 
-void set_option(char **options, const char *name, const char *value) {
-  int i;
-
-  for (i = 0; i < MAX_OPTIONS - 3; i++) {
-    if (options[i] == NULL) {
-      options[i] = sdup(name);
-      options[i + 1] = sdup(value);
-      options[i + 2] = NULL;
-      break;
-    } else if (!strcmp(options[i], name)) {
-      free(options[i + 1]);
-      options[i + 1] = sdup(value);
-      break;
-    }
-  }
-
-  if (i == MAX_OPTIONS - 3) {
-    die("%s", "Too many options specified");
-  }
-}
-
-
 char *get_option(char **options, const char *option_name) {
   int i;
 
