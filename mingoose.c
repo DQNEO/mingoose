@@ -1853,7 +1853,7 @@ static int event_handler(struct mg_event *event) {
     return 0;
 }
 
-
+// Start Mongoose
 int main(int argc, char *argv[]) {
 
     int i;
@@ -1866,8 +1866,6 @@ int main(int argc, char *argv[]) {
     signal(SIGTERM, signal_handler);
     signal(SIGINT, signal_handler);
     signal(SIGCHLD, signal_handler);
-
-    // Start Mongoose
 
     // Allocate context and initialize reasonable general case defaults.
     // TODO(lsm): do proper error handling here.
