@@ -529,4 +529,14 @@ void free_context(struct mg_context *ctx) ;
 const char *mg_get_builtin_mime_type(const char *path) ;
 
 #define http_500_error  "Internal Server Error"
+void fclose_on_exec(FILE *fp);
+int parse_range_header(const char *header, int64_t *a, int64_t *b) ;
+void gmt_time_string(char *buf, size_t buf_len, time_t *t) ;
+
+void construct_etag(char *buf, size_t buf_len,
+                    const struct file *filep);
+void response_file(struct mg_connection *conn, const char *path,
+                   struct file *filep) ;
+
+
 #endif // MONGOOSE_HEADER_INCLUDED
