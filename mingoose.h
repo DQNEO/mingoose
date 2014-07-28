@@ -538,5 +538,7 @@ void construct_etag(char *buf, size_t buf_len,
 void response_file(struct mg_connection *conn, const char *path,
                    struct file *filep) ;
 
+int must_hide_file(struct mg_connection *conn, const char *path) ;
+void mg_url_encode(const char *src, char *dst, size_t dst_len);
 
 #endif // MONGOOSE_HEADER_INCLUDED
