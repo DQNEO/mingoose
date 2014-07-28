@@ -646,47 +646,6 @@ static int put_dir(const char *path) {
     return res;
 }
 
-static void mkcol(struct mg_connection *conn, const char *path) {
-    int rc, body_len;
-    struct de de;
-
-    memset(&de.file, 0, sizeof(de.file));
-    mg_stat(path, &de.file);
-
-    if (de.file.modification_time) {
-        response_error(conn, 405, "Method Not Allowed",
-                        "mkcol(%s): %s", path, strerror(ERRNO));
-        return;
-    }
-
-    body_len = conn->data_len - conn->request_len;
-    if(body_len > 0) {
-        response_error(conn, 415, "Unsupported media type",
-                        "mkcol(%s): %s", path, strerror(ERRNO));
-        return;
-    }
-
-    rc = mg_mkdir(path, 0755);
-
-    if (rc == 0) {
-        conn->status_code = 201;
-        mg_printf(conn, "HTTP/1.1 %d Created\r\n\r\n", conn->status_code);
-    } else if (rc == -1) {
-        if(errno == EEXIST)
-            response_error(conn, 405, "Method Not Allowed",
-                            "mkcol(%s): %s", path, strerror(ERRNO));
-        else if(errno == EACCES)
-            response_error(conn, 403, "Forbidden",
-                            "mkcol(%s): %s", path, strerror(ERRNO));
-        else if(errno == ENOENT)
-            response_error(conn, 409, "Conflict",
-                            "mkcol(%s): %s", path, strerror(ERRNO));
-        else
-            response_error(conn, 500, http_500_error,
-                            "fopen(%s): %s", path, strerror(ERRNO));
-    }
-}
-
 static void put_file(struct mg_connection *conn, const char *path) {
     struct file file = STRUCT_FILE_INITIALIZER;
     FILE *fp;
@@ -724,7 +683,7 @@ static void put_file(struct mg_connection *conn, const char *path) {
 
 static void handle_options_request(struct mg_connection *conn) {
     static const char reply[] = "HTTP/1.1 200 OK\r\n"
-        "Allow: GET, POST, HEAD, CONNECT, PUT, DELETE, OPTIONS, MKCOL\r\n"
+        "Allow: GET, POST, HEAD, CONNECT, PUT, DELETE, OPTIONS\r\n"
         "DAV: 1\r\n\r\n";
 
     conn->status_code = 200;
@@ -923,8 +882,7 @@ FILE *mg_upload(struct mg_connection *conn, const char *destination_dir,
 static int is_put_or_delete_request(const struct mg_connection *conn) {
     const char *s = conn->request_info.request_method;
     return s != NULL && (!strcmp(s, "PUT") ||
-                         !strcmp(s, "DELETE") ||
-                         !strcmp(s, "MKCOL"));
+                         !strcmp(s, "DELETE"));
 }
 
 static void handle_delete_request(struct mg_connection *conn,
@@ -984,8 +942,6 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
         send_authorization_request(conn);
     } else if (!strcmp(ri->request_method, "PUT")) {
         put_file(conn, path);
-    } else if (!strcmp(ri->request_method, "MKCOL")) {
-        mkcol(conn, path);
     } else if (!strcmp(ri->request_method, "DELETE")) {
         handle_delete_request(conn, path);
     } else if (file.modification_time == (time_t) 0 ||
