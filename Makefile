@@ -20,8 +20,8 @@ CFLAGS = -std=c99 -W -Wall -pedantic -pthread -g -O0 -DNO_SSL_DL -DNO_SSL -DNO_C
 # If not so, this can break some on some Linux distros which use
 # "-Wl,--as-needed" turned on by default  in cc command.
 # Also, this is turned in many other distros in static linkage builds.
-$(PROG): mingoose.c mingoose.h request.c string.c parse_date.c mg_printf.c response.c response_file.c logger.c options.c mime_type.c
-	$(CC) mingoose.c request.c string.c options.c parse_date.c auth.c mg_printf.c response.c response_file.c logger.c mime_type.c -o $@ $(CFLAGS)
+$(PROG): mingoose.c mingoose.h request.c string.c parse_date.c mg_printf.c response_error.c response_file.c logger.c options.c mime_type.c
+	$(CC) mingoose.c request.c string.c options.c parse_date.c auth.c mg_printf.c response_error.c response_file.c logger.c mime_type.c -o $@ $(CFLAGS)
 
 test:	$(PROG)
 	prove t/00.t
