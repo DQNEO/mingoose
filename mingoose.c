@@ -904,73 +904,12 @@ static void put_file(struct mg_connection *conn, const char *path) {
 
 static void handle_options_request(struct mg_connection *conn) {
     static const char reply[] = "HTTP/1.1 200 OK\r\n"
-        "Allow: GET, POST, HEAD, CONNECT, PUT, DELETE, OPTIONS, PROPFIND, MKCOL\r\n"
+        "Allow: GET, POST, HEAD, CONNECT, PUT, DELETE, OPTIONS, MKCOL\r\n"
         "DAV: 1\r\n\r\n";
 
     conn->status_code = 200;
     mg_write(conn, reply, sizeof(reply) - 1);
 }
-
-// Writes PROPFIND properties for a collection element
-static void print_props(struct mg_connection *conn, const char* uri,
-                        struct file *filep) {
-    char mtime[64];
-    gmt_time_string(mtime, sizeof(mtime), &filep->modification_time);
-    conn->num_bytes_sent += mg_printf(conn,
-                                      "<d:response>"
-                                      "<d:href>%s</d:href>"
-                                      "<d:propstat>"
-                                      "<d:prop>"
-                                      "<d:resourcetype>%s</d:resourcetype>"
-                                      "<d:getcontentlength>%" INT64_FMT "</d:getcontentlength>"
-                                      "<d:getlastmodified>%s</d:getlastmodified>"
-                                      "</d:prop>"
-                                      "<d:status>HTTP/1.1 200 OK</d:status>"
-                                      "</d:propstat>"
-                                      "</d:response>\n",
-                                      uri,
-                                      filep->is_directory ? "<d:collection/>" : "",
-                                      filep->size,
-                                      mtime);
-}
-
-static void print_dav_dir_entry(struct de *de, void *data) {
-    char href[PATH_MAX];
-    char href_encoded[PATH_MAX];
-    struct mg_connection *conn = (struct mg_connection *) data;
-    mg_snprintf(href, sizeof(href), "%s%s",
-                conn->request_info.uri, de->file_name);
-    mg_url_encode(href, href_encoded, PATH_MAX-1);
-    print_props(conn, href_encoded, &de->file);
-}
-
-static void handle_propfind(struct mg_connection *conn, const char *path,
-                            struct file *filep) {
-    const char *depth = mg_get_header(conn, "Depth");
-
-    conn->must_close = 1;
-    conn->status_code = 207;
-    mg_printf(conn, "HTTP/1.1 207 Multi-Status\r\n"
-              "Connection: close\r\n"
-              "Content-Type: text/xml; charset=utf-8\r\n\r\n");
-
-    conn->num_bytes_sent += mg_printf(conn,
-                                      "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                                      "<d:multistatus xmlns:d='DAV:'>\n");
-
-    // Print properties for the requested resource itself
-    print_props(conn, conn->request_info.uri, filep);
-
-    // If it is a directory, print directory entries too if Depth is not 0
-    if (filep->is_directory &&
-        !mg_strcasecmp(conn->ctx->config[op("enable_directory_listing")], "yes") &&
-        (depth == NULL || strcmp(depth, "0") != 0)) {
-        scan_directory(conn, path, conn, &print_dav_dir_entry);
-    }
-
-    conn->num_bytes_sent += mg_printf(conn, "%s\n", "</d:multistatus>");
-}
-
 
 static int isbyte(int n) {
     return n >= 0 && n <= 255;
@@ -1235,8 +1174,6 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
     } else if (file.is_directory && ri->uri[uri_len - 1] != '/') {
         mg_printf(conn, "HTTP/1.1 301 Moved Permanently\r\n"
                   "Location: %s/\r\n\r\n", ri->uri);
-    } else if (!strcmp(ri->request_method, "PROPFIND")) {
-        handle_propfind(conn, path, &file);
     } else if (file.is_directory &&
                !substitute_index_file(conn, path, sizeof(path), &file)) {
         if (!mg_strcasecmp(conn->ctx->config[op("enable_directory_listing")], "yes")) {
