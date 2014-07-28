@@ -528,4 +528,5 @@ struct mg_connection *create_fake_connection(struct mg_context *ctx) ;
 void free_context(struct mg_context *ctx) ;
 const char *mg_get_builtin_mime_type(const char *path) ;
 
+#define http_500_error  "Internal Server Error"
 #endif // MONGOOSE_HEADER_INCLUDED

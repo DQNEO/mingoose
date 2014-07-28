@@ -1,5 +1,4 @@
 #include "mingoose.h"
-const char *http_500_error = "Internal Server Error";
 //-- src/util.c --
 
 // Return fake connection structure. Used for logging, if connection
