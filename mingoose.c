@@ -718,7 +718,7 @@ static void fclose_on_exec(FILE *fp) {
     }
 }
 
-static void handle_file_request(struct mg_connection *conn, const char *path,
+static void response_file(struct mg_connection *conn, const char *path,
                                 struct file *filep) {
     char date[64], lm[64], etag[64], range[64];
     const char *msg = "OK", *hdr;
@@ -1373,7 +1373,7 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
     } else if (is_not_modified(conn, &file)) {
         send_http_error(conn, 304, "Not Modified", "%s", "");
     } else {
-        handle_file_request(conn, path, &file);
+        response_file(conn, path, &file);
     }
 }
 
