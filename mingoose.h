@@ -467,7 +467,7 @@ char *skip_quoted(char **buf, const char *delimiters,
                   const char *whitespace, char quotechar);
 
 int mg_stat(const char *path, struct file *filep);
-void send_http_error(struct mg_connection *, int, const char *,
+void response_error(struct mg_connection *, int, const char *,
                      PRINTF_FORMAT_STRING(const char *fmt), ...)
     PRINTF_ARGS(4, 5);
 void cry(struct mg_connection *conn,

@@ -608,7 +608,7 @@ static void handle_directory_request(struct mg_connection *conn,
     struct dir_scan_data data = { NULL, 0, 128 };
 
     if (!scan_directory(conn, dir, &data, dir_scan_callback)) {
-        send_http_error(conn, 500, "Cannot open directory",
+        response_error(conn, 500, "Cannot open directory",
                         "Error: opendir(%s): %s", dir, strerror(ERRNO));
         return;
     }
@@ -745,9 +745,9 @@ static int forward_body_data(struct mg_connection *conn, FILE *fp,
     assert(fp != NULL);
 
     if (conn->content_len == INT64_MAX) {
-        send_http_error(conn, 411, "Length Required", "%s", "");
+        response_error(conn, 411, "Length Required", "%s", "");
     } else if (expect != NULL && mg_strcasecmp(expect, "100-continue")) {
-        send_http_error(conn, 417, "Expectation Failed", "%s", "");
+        response_error(conn, 417, "Expectation Failed", "%s", "");
     } else {
         if (expect != NULL) {
             (void) mg_printf(conn, "%s", "HTTP/1.1 100 Continue\r\n\r\n");
@@ -784,7 +784,7 @@ static int forward_body_data(struct mg_connection *conn, FILE *fp,
 
         // Each error code path in this function must send an error
         if (!success) {
-            send_http_error(conn, 577, http_500_error, "%s", "");
+            response_error(conn, 577, http_500_error, "%s", "");
         }
     }
 
@@ -834,14 +834,14 @@ static void mkcol(struct mg_connection *conn, const char *path) {
     mg_stat(path, &de.file);
 
     if (de.file.modification_time) {
-        send_http_error(conn, 405, "Method Not Allowed",
+        response_error(conn, 405, "Method Not Allowed",
                         "mkcol(%s): %s", path, strerror(ERRNO));
         return;
     }
 
     body_len = conn->data_len - conn->request_len;
     if(body_len > 0) {
-        send_http_error(conn, 415, "Unsupported media type",
+        response_error(conn, 415, "Unsupported media type",
                         "mkcol(%s): %s", path, strerror(ERRNO));
         return;
     }
@@ -853,16 +853,16 @@ static void mkcol(struct mg_connection *conn, const char *path) {
         mg_printf(conn, "HTTP/1.1 %d Created\r\n\r\n", conn->status_code);
     } else if (rc == -1) {
         if(errno == EEXIST)
-            send_http_error(conn, 405, "Method Not Allowed",
+            response_error(conn, 405, "Method Not Allowed",
                             "mkcol(%s): %s", path, strerror(ERRNO));
         else if(errno == EACCES)
-            send_http_error(conn, 403, "Forbidden",
+            response_error(conn, 403, "Forbidden",
                             "mkcol(%s): %s", path, strerror(ERRNO));
         else if(errno == ENOENT)
-            send_http_error(conn, 409, "Conflict",
+            response_error(conn, 409, "Conflict",
                             "mkcol(%s): %s", path, strerror(ERRNO));
         else
-            send_http_error(conn, 500, http_500_error,
+            response_error(conn, 500, http_500_error,
                             "fopen(%s): %s", path, strerror(ERRNO));
     }
 }
@@ -879,11 +879,11 @@ static void put_file(struct mg_connection *conn, const char *path) {
     if ((rc = put_dir(path)) == 0) {
         mg_printf(conn, "HTTP/1.1 %d OK\r\n\r\n", conn->status_code);
     } else if (rc == -1) {
-        send_http_error(conn, 500, http_500_error,
+        response_error(conn, 500, http_500_error,
                         "put_dir(%s): %s", path, strerror(ERRNO));
     } else if ((fp = fopen(path, "wb+")) == NULL) {
         fclose(fp);
-        send_http_error(conn, 500, http_500_error,
+        response_error(conn, 500, http_500_error,
                         "fopen(%s): %s", path, strerror(ERRNO));
     } else {
         fclose_on_exec(fp);
@@ -1173,17 +1173,17 @@ static void handle_delete_request(struct mg_connection *conn,
     struct file file = STRUCT_FILE_INITIALIZER;
 
     if (!mg_stat(path, &file)) {
-        send_http_error(conn, 404, "Not Found", "%s", "File not found");
+        response_error(conn, 404, "Not Found", "%s", "File not found");
     } else if (!file.modification_time) {
-        send_http_error(conn, 500, http_500_error, "remove(%s): %s", path,
+        response_error(conn, 500, http_500_error, "remove(%s): %s", path,
                         strerror(ERRNO));
     } else if (file.is_directory) {
         remove_directory(conn, path);
-        send_http_error(conn, 204, "No Content", "%s", "");
+        response_error(conn, 204, "No Content", "%s", "");
     } else if (mg_remove(path) == 0) {
-        send_http_error(conn, 204, "No Content", "%s", "");
+        response_error(conn, 204, "No Content", "%s", "");
     } else {
-        send_http_error(conn, 423, "Locked", "remove(%s): %s", path,
+        response_error(conn, 423, "Locked", "remove(%s): %s", path,
                         strerror(ERRNO));
     }
 }
@@ -1219,7 +1219,7 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
     } else if (!strcmp(ri->request_method, "OPTIONS")) {
         handle_options_request(conn);
     } else if (conn->ctx->settings.document_root == NULL) {
-        send_http_error(conn, 404, "Not Found", "Not Found");
+        response_error(conn, 404, "Not Found", "Not Found");
     } else if (is_put_or_delete_request(conn) &&
                (is_authorized_for_put(conn) != 1)) {
         send_authorization_request(conn);
@@ -1231,7 +1231,7 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
         handle_delete_request(conn, path);
     } else if (file.modification_time == (time_t) 0 ||
                must_hide_file(conn, path)) {
-        send_http_error(conn, 404, "Not Found", "%s", "File not found");
+        response_error(conn, 404, "Not Found", "%s", "File not found");
     } else if (file.is_directory && ri->uri[uri_len - 1] != '/') {
         mg_printf(conn, "HTTP/1.1 301 Moved Permanently\r\n"
                   "Location: %s/\r\n\r\n", ri->uri);
@@ -1242,11 +1242,11 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
         if (!mg_strcasecmp(conn->ctx->config[op("enable_directory_listing")], "yes")) {
             handle_directory_request(conn, path);
         } else {
-            send_http_error(conn, 403, "Directory Listing Denied",
+            response_error(conn, 403, "Directory Listing Denied",
                             "Directory listing denied");
         }
     } else if (is_not_modified(conn, &file)) {
-        send_http_error(conn, 304, "Not Modified", "%s", "");
+        response_error(conn, 304, "Not Modified", "%s", "");
     } else {
         response_file(conn, path, &file);
     }
@@ -1415,15 +1415,15 @@ static void process_new_connection(struct mg_connection *conn) {
     conn->data_len = 0;
     do {
         if (!getreq(conn, ebuf, sizeof(ebuf))) {
-            send_http_error(conn, 500, "Server Error", "%s", ebuf);
+            response_error(conn, 500, "Server Error", "%s", ebuf);
             conn->must_close = 1;
         } else if (!is_valid_uri(conn->request_info.uri)) {
             snprintf(ebuf, sizeof(ebuf), "Invalid URI: [%s]", ri->uri);
-            send_http_error(conn, 400, "Bad Request", "%s", ebuf);
+            response_error(conn, 400, "Bad Request", "%s", ebuf);
         } else if (strcmp(ri->http_version, "1.0") &&
                    strcmp(ri->http_version, "1.1")) {
             snprintf(ebuf, sizeof(ebuf), "Bad HTTP version: [%s]", ri->http_version);
-            send_http_error(conn, 505, "Bad HTTP version", "%s", ebuf);
+            response_error(conn, 505, "Bad HTTP version", "%s", ebuf);
         }
 
         if (ebuf[0] == '\0') {

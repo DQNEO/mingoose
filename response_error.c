@@ -1,6 +1,6 @@
 #include "mingoose.h"
 
-void send_http_error(struct mg_connection *conn, int status,
+void response_error(struct mg_connection *conn, int status,
                             const char *reason, const char *fmt, ...) {
   char buf[MG_BUF_LEN];
   va_list ap;

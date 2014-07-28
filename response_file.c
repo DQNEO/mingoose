@@ -70,7 +70,7 @@ void response_file(struct mg_connection *conn, const char *path,
     }
 
     if ((fp = fopen(path, "rb")) == NULL) {
-        send_http_error(conn, 500, http_500_error,
+        response_error(conn, 500, http_500_error,
                         "fopen(%s): %s", path, strerror(ERRNO));
         return;
     }
@@ -85,7 +85,7 @@ void response_file(struct mg_connection *conn, const char *path,
         // actually, range requests don't play well with a pre-gzipped
         // file (since the range is specified in the uncmpressed space)
         if (filep->gzipped) {
-            send_http_error(conn, 501, "Not Implemented",
+            response_error(conn, 501, "Not Implemented",
                             "range requests in gzipped files are not supported");
             return;
         }
