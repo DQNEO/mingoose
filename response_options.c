@@ -1,6 +1,6 @@
 #include "mingoose.h"
 
-void handle_options_request(struct mg_connection *conn) {
+void response_options(struct mg_connection *conn) {
     static const char reply[] = "HTTP/1.1 200 OK\r\n"
         "Allow: GET, POST, HEAD, CONNECT, PUT, DELETE, OPTIONS\r\n"
         "DAV: 1\r\n\r\n";

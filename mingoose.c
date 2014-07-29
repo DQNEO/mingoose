@@ -925,7 +925,7 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
     } else if (call_user(MG_REQUEST_BEGIN, conn, (void *) ri->uri) == 1) {
         // Do nothing, callback has served the request
     } else if (!strcmp(ri->request_method, "OPTIONS")) {
-        handle_options_request(conn);
+        response_options(conn);
     } else if (conn->ctx->settings.document_root == NULL) {
         response_error(conn, 404, "Not Found", "Not Found");
     } else if (is_put_or_delete_request(conn) &&
