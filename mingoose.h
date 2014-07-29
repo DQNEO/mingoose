@@ -540,5 +540,6 @@ void response_file(struct mg_connection *conn, const char *path,
 
 int must_hide_file(struct mg_connection *conn, const char *path) ;
 void mg_url_encode(const char *src, char *dst, size_t dst_len);
+void handle_options_request(struct mg_connection *conn) ;
 
 #endif // MONGOOSE_HEADER_INCLUDED

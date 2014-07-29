@@ -681,15 +681,6 @@ static void put_file(struct mg_connection *conn, const char *path) {
     }
 }
 
-static void handle_options_request(struct mg_connection *conn) {
-    static const char reply[] = "HTTP/1.1 200 OK\r\n"
-        "Allow: GET, POST, HEAD, CONNECT, PUT, DELETE, OPTIONS\r\n"
-        "DAV: 1\r\n\r\n";
-
-    conn->status_code = 200;
-    mg_write(conn, reply, sizeof(reply) - 1);
-}
-
 static int isbyte(int n) {
     return n >= 0 && n <= 255;
 }
