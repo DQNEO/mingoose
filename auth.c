@@ -213,17 +213,6 @@ int check_authorization(struct mg_connection *conn, const char *path) {
   return authorized;
 }
 
-void send_authorization_request(struct mg_connection *conn) {
-  conn->status_code = 401;
-  mg_printf(conn,
-            "HTTP/1.1 401 Unauthorized\r\n"
-            "Content-Length: 0\r\n"
-            "WWW-Authenticate: Digest qop=\"auth\", "
-            "realm=\"%s\", nonce=\"%lu\"\r\n\r\n",
-            conn->ctx->config[op("authentication_domain")],
-            (unsigned long) time(NULL));
-}
-
 int is_authorized_for_put(struct mg_connection *conn) {
     const char *passfile = conn->ctx->config[op("put_delete_auth_file")];
   FILE *fp;
