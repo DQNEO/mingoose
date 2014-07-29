@@ -135,7 +135,7 @@ static void print_dir_entry(const struct de *de) {
                                                   de->conn->request_info.uri, href, slash, de->file_name, slash, mod, size);
 }
 
-void handle_directory_request(struct mg_connection *conn,
+void response_directory_index(struct mg_connection *conn,
                                      const char *dir) {
     int i, sort_direction;
     struct dir_scan_data data = { NULL, 0, 128 };

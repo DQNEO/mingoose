@@ -542,5 +542,11 @@ int must_hide_file(struct mg_connection *conn, const char *path) ;
 void mg_url_encode(const char *src, char *dst, size_t dst_len);
 void response_options(struct mg_connection *conn) ;
 void send_authorization_request(struct mg_connection *conn);
+void response_directory_index(struct mg_connection *conn,
+                              const char *dir) ;
+
+void dispatch_and_send_response(struct mg_connection *conn);
+int64_t left_to_read(const struct mg_connection *conn) ;
+int64_t push(FILE *fp, SOCKET sock, SSL *ssl, const char *buf, int64_t len);
 
 #endif // MONGOOSE_HEADER_INCLUDED
