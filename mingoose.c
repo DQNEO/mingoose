@@ -922,37 +922,50 @@ static void dispatch_and_send_response(struct mg_connection *conn) {
     if (!is_put_or_delete_request(conn) &&
         !check_authorization(conn, path)) {
         send_authorization_request(conn);
+        return ;
     } else if (call_user(MG_REQUEST_BEGIN, conn, (void *) ri->uri) == 1) {
         // Do nothing, callback has served the request
+        return ;
     } else if (!strcmp(ri->request_method, "OPTIONS")) {
         response_options(conn);
+        return ;
     } else if (conn->ctx->settings.document_root == NULL) {
         response_error(conn, 404, "Not Found", "Not Found");
+        return ;
     } else if (is_put_or_delete_request(conn) &&
                (is_authorized_for_put(conn) != 1)) {
         send_authorization_request(conn);
+        return ;
     } else if (!strcmp(ri->request_method, "PUT")) {
         put_file(conn, path);
+        return ;
     } else if (!strcmp(ri->request_method, "DELETE")) {
         handle_delete_request(conn, path);
+        return ;
     } else if (file.modification_time == (time_t) 0 ||
                must_hide_file(conn, path)) {
         response_error(conn, 404, "Not Found", "%s", "File not found");
+        return ;
     } else if (file.is_directory && ri->uri[uri_len - 1] != '/') {
         mg_printf(conn, "HTTP/1.1 301 Moved Permanently\r\n"
                   "Location: %s/\r\n\r\n", ri->uri);
+        return ;
     } else if (file.is_directory &&
                !substitute_index_file(conn, path, sizeof(path), &file)) {
         if (!mg_strcasecmp(conn->ctx->config[op("enable_directory_listing")], "yes")) {
             handle_directory_request(conn, path);
+            return ;
         } else {
             response_error(conn, 403, "Directory Listing Denied",
                             "Directory listing denied");
+            return ;
         }
     } else if (is_not_modified(conn, &file)) {
         response_error(conn, 304, "Not Modified", "%s", "");
+        return ;
     } else {
         response_file(conn, path, &file);
+        return ;
     }
 }
 
