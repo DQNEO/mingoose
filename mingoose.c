@@ -915,8 +915,10 @@ void free_context(struct mg_context *ctx) {
 
     // Deallocate config parameters
     for (i = 0; i < NUM_OPTIONS; i++) {
-        if (ctx->config[i] != NULL)
-            free(ctx->config[i]);
+        if (ctx->config[i] != NULL) {
+            // this free causes "double free corruption", i don't know why :(
+            //free(ctx->config[i]);
+        }
     }
 
     // Deallocate context itself
